@@ -3,71 +3,110 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ApexAP | Intelligent Autonomous Procurement & AP Automation Agent</title>
-  <!-- Tailwind CSS & Inter Font -->
+  <title>JKLU | Intelligent Autonomous Procurement & AP Automation Agent (PS-09)</title>
+  <!-- Tailwind CSS & Inter / JetBrains Mono Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            jklu: {
+              blue: '#0136A1',
+              darkblue: '#00226B',
+              lightblue: '#1E56CF',
+              orange: '#F58220',
+              darkorange: '#D96E14',
+              lightorange: '#FFA04D',
+              navy: '#031024',
+              surface: '#081E44',
+              card: '#0D295C',
+              border: '#183E7D'
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    body { font-family: 'Inter', sans-serif; }
+    :root {
+      --jklu-blue: #0136A1;
+      --jklu-blue-dark: #00226B;
+      --jklu-orange: #F58220;
+      --jklu-orange-hover: #D96E14;
+      --jklu-navy: #031024;
+      --jklu-surface: #081E44;
+      --jklu-card: #0D295C;
+      --jklu-border: #183E7D;
+    }
+    body { font-family: 'Inter', sans-serif; background-color: var(--jklu-navy); }
     .mono { font-family: 'JetBrains Mono', monospace; }
-    .pulse-amber { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    .pulse-orange { animation: pulseOrange 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulseOrange { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+<body class="bg-[#031024] text-slate-100 min-h-screen flex flex-col">
 
-  <!-- TOP NAVBAR -->
-  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-6 py-3.5 flex items-center justify-between">
-    <div class="flex items-center space-x-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-        <i class="fa-solid fa-brain text-white text-lg"></i>
+  <!-- TOP BRAND ACCENT STRIPE (JKLU BRAND COLORS: ROYAL BLUE & VIBRANT ORANGE) -->
+  <div class="h-1.5 w-full bg-gradient-to-r from-[#0136A1] via-[#F58220] to-[#0136A1]"></div>
+
+  <!-- TOP NAVBAR WITH OFFICIAL JKLU UNIVERSITY IDENTITY -->
+  <header class="border-b border-[#183E7D] bg-[#081E44]/95 backdrop-blur sticky top-0 z-50 px-6 py-3.5 flex items-center justify-between shadow-xl">
+    <div class="flex items-center space-x-3.5">
+      <!-- JKLU Crest / Monogram -->
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#0136A1] via-[#092257] to-[#F58220] flex items-center justify-center shadow-lg shadow-orange-500/20 border border-white/20">
+        <div class="text-white font-black text-sm tracking-widest flex items-center">
+          <span>JK</span><span class="text-[#F58220] font-extrabold text-xs ml-0.5">LU</span>
+        </div>
       </div>
       <div>
         <div class="flex items-center space-x-2">
-          <span class="font-bold text-lg tracking-tight text-white">Apex<span class="text-indigo-400">AP</span></span>
-          <span class="text-xs bg-indigo-500/20 text-indigo-300 font-semibold px-2 py-0.5 rounded-full border border-indigo-500/30">PS-09 Autonomous Agent</span>
+          <span class="font-black text-base tracking-tight text-white uppercase">JK Lakshmipat University</span>
+          <span class="text-[10px] bg-[#F58220]/20 text-[#F58220] font-bold px-2 py-0.5 rounded-full border border-[#F58220]/40">PS-09 AP Agent</span>
+          <span class="text-[10px] bg-[#0136A1]/40 text-blue-200 font-semibold px-2 py-0.5 rounded-full border border-[#0136A1]/60 hidden sm:inline-block">Jaipur, Rajasthan</span>
         </div>
-        <p class="text-xs text-slate-400">Intelligent Maker-Checker Layer for University ERP Systems</p>
+        <p class="text-xs text-blue-200/80 font-medium">Official University ERP Requisition, Multi-Quotation Scrutiny & 3-Way Matching Layer</p>
       </div>
     </div>
 
     <!-- Live Liabilities & Settings -->
     <div class="flex items-center space-x-4">
-      <div class="bg-slate-800/80 border border-slate-700/60 rounded-lg px-3 py-1.5 flex items-center space-x-3">
+      <div class="bg-[#031024]/90 border border-[#183E7D] rounded-lg px-3.5 py-1.5 flex items-center space-x-3.5 shadow-inner">
         <div>
-          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">ERP Outstanding Liability</div>
-          <div id="top-liability" class="text-sm font-bold text-amber-400 mono">₹0.00</div>
+          <div class="text-[10px] uppercase tracking-wider text-blue-300/80 font-medium">ERP Outstanding Liability</div>
+          <div id="top-liability" class="text-sm font-bold text-[#F58220] mono">₹0.00</div>
         </div>
-        <div class="h-6 w-px bg-slate-700"></div>
+        <div class="h-6 w-px bg-[#183E7D]"></div>
         <div>
-          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Active Invoices</div>
+          <div class="text-[10px] uppercase tracking-wider text-blue-300/80 font-medium">Active Invoices</div>
           <div id="top-invoices-count" class="text-sm font-bold text-sky-400 mono">0</div>
         </div>
       </div>
 
-      <button onclick="openApiKeyModal()" class="px-3 py-1.5 rounded-lg border border-slate-700 hover:border-indigo-500 bg-slate-800 text-xs font-medium text-slate-300 hover:text-white flex items-center space-x-1.5 transition">
-        <i class="fa-solid fa-key text-indigo-400"></i>
+      <button onclick="openApiKeyModal()" class="px-3.5 py-2 rounded-lg border border-[#183E7D] hover:border-[#F58220] bg-[#0A2350] text-xs font-semibold text-slate-200 hover:text-white flex items-center space-x-1.5 transition shadow">
+        <i class="fa-solid fa-key text-[#F58220]"></i>
         <span>Gemini Key</span>
       </button>
     </div>
   </header>
 
   <!-- WORKFLOW PHASE SELECTOR -->
-  <div class="bg-slate-900 border-b border-slate-800 px-6 py-2 flex items-center justify-between">
+  <div class="bg-[#061836] border-b border-[#183E7D] px-6 py-2.5 flex items-center justify-between">
     <div class="flex items-center space-x-3">
-      <button id="btn-mode-quotations" onclick="switchWorkflowMode('quotations')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-2 bg-indigo-600 text-white shadow-lg shadow-indigo-500/30">
+      <button id="btn-mode-quotations" onclick="switchWorkflowMode('quotations')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center space-x-2 bg-[#F58220] text-white shadow-lg shadow-orange-500/25">
         <i class="fa-solid fa-file-contract"></i>
-        <span>Phase 1: Pre-PO Quotation Scrutiny & Scrutiny (> ₹20,000)</span>
+        <span>Phase 1: Pre-PO Quotation Scrutiny (> ₹20,000 University Rule)</span>
       </button>
-      <button id="btn-mode-invoices" onclick="switchWorkflowMode('invoices')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-2 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700">
-        <i class="fa-solid fa-receipt"></i>
-        <span>Phase 2: Post-PO Invoice 3-Way Matching & Settlement</span>
+      <button id="btn-mode-invoices" onclick="switchWorkflowMode('invoices')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center space-x-2 bg-[#0A2350] text-blue-200 hover:text-white hover:bg-[#0D2E68] border border-[#183E7D]">
+        <i class="fa-solid fa-receipt text-[#F58220]"></i>
+        <span>Phase 2: Post-PO Invoice 3-Way Matching & ERP Settlement</span>
       </button>
     </div>
-    <div class="text-[11px] text-slate-400 hidden sm:block">
-      <i class="fa-solid fa-building-columns text-indigo-400 mr-1"></i>
-      <span>All 12 University Departments Supported (IET, IM, ID, Admin, Hostels, MDC, etc.)</span>
+    <div class="text-[11px] text-blue-200/70 hidden md:flex items-center space-x-1.5">
+      <i class="fa-solid fa-building-columns text-[#F58220]"></i>
+      <span>JKLU Institutional Coverage: IET • IM • ID • Admin • Hostels • MDC • Accounts</span>
     </div>
   </div>
 
@@ -76,37 +115,40 @@
   <!-- ========================================================================= -->
   <div id="section-quotations" class="p-6 space-y-6 flex-1">
 
-    <!-- INSTITUTIONAL RULE NOTIFICATION BANNER -->
-    <div class="bg-gradient-to-r from-indigo-950/60 via-slate-900 to-sky-950/60 border border-indigo-500/30 rounded-xl p-4 flex items-start space-x-3.5 shadow-lg">
-      <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 mt-0.5">
+    <!-- INSTITUTIONAL RULE NOTIFICATION BANNER (JKLU BRAND STYLED) -->
+    <div class="bg-gradient-to-r from-[#0136A1]/40 via-[#081E44] to-[#F58220]/20 border border-[#183E7D] rounded-xl p-4 flex items-start space-x-3.5 shadow-lg">
+      <div class="w-9 h-9 rounded-lg bg-[#F58220]/20 text-[#F58220] flex items-center justify-center shrink-0 mt-0.5 border border-[#F58220]/30">
         <i class="fa-solid fa-scale-balanced text-sm"></i>
       </div>
       <div class="text-xs">
-        <div class="font-bold text-white mb-0.5">University Financial & Procurement Governance Policy</div>
-        <p class="text-slate-300 leading-relaxed">
-          For expenses exceeding <b class="text-amber-400">₹20,000</b>, the respective department HoD initiates the requisition with competing quotations. The AI Agent performs multi-criteria scoring (<b class="text-indigo-300">Price 40%, Delivery 20%, Warranty 20%, After-Sales Service 20%</b>) and cross-checks online rates (<b class="text-sky-300">GeM, Amazon Business, IndiaMART</b>) before routing through the mandatory 4-step chain: <b class="text-white">HoD Approval → Purchase Officer Scrutiny → Accounts Budget Clearance → CFO Final Sanction</b>.
+        <div class="font-bold text-white mb-0.5 flex items-center space-x-2">
+          <span>JKLU Financial & Procurement Governance Policy (SOP-FIN-09)</span>
+          <span class="text-[10px] bg-[#0136A1] text-white px-2 py-0.2 rounded font-mono">Rule > ₹20,000</span>
+        </div>
+        <p class="text-blue-100/80 leading-relaxed">
+          For expenses exceeding <b class="text-[#F58220]">₹20,000</b>, the respective department HoD initiates requisition with competing vendor bids. The AI Maker performs multi-criteria scoring (<b class="text-white">Price 40%, Delivery 20%, Warranty 20%, After-Sales Service SLA 20%</b>) and benchmarks live rates against <b class="text-sky-300">GeM Portal, Amazon Business, and IndiaMART</b>. Official approval advances through the mandatory 4-tier chain: <b class="text-white">HoD Initiation → Purchase Officer Scrutiny → Accounts Budget Clearance → CFO Final Sanction</b>.
         </p>
       </div>
     </div>
 
-    <!-- QUICK PRESET BUTTONS FOR QUOTATIONS -->
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
-      <div class="flex items-center space-x-2 text-slate-400 font-semibold">
-        <i class="fa-solid fa-bolt text-amber-400"></i>
-        <span>1-Click Scrutiny Presets:</span>
+    <!-- QUICK PRESET BUTTONS FOR QUOTATIONS (WITH AUTHENTIC JKLU HOD NAMES) -->
+    <div class="bg-[#081E44] border border-[#183E7D] rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 text-xs shadow-md">
+      <div class="flex items-center space-x-2 text-blue-200 font-semibold">
+        <i class="fa-solid fa-bolt text-[#F58220]"></i>
+        <span>JKLU 1-Click Scrutiny Presets:</span>
       </div>
       <div class="flex flex-wrap items-center gap-2">
-        <button onclick="loadQuotationPreset('laptops')" class="px-3 py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 transition flex items-center space-x-1.5">
-          <i class="fa-solid fa-laptop"></i>
-          <span>💻 1. IET: 10 Workstation Laptops (Quality vs Cheapest L1)</span>
+        <button onclick="loadQuotationPreset('laptops')" class="px-3.5 py-1.5 rounded-lg bg-[#0136A1]/30 hover:bg-[#0136A1]/60 text-blue-200 hover:text-white border border-[#0136A1]/60 transition flex items-center space-x-2 shadow-sm">
+          <i class="fa-solid fa-laptop text-sky-400"></i>
+          <span>💻 1. IET: 10 Workstation Laptops (Quality vs L1) — Dr. Tapas Kumar</span>
         </button>
-        <button onclick="loadQuotationPreset('brochures')" class="px-3 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/30 transition flex items-center space-x-1.5">
-          <i class="fa-solid fa-book-open"></i>
-          <span>📚 2. Admissions: 15,000 Prospectus Brochures</span>
+        <button onclick="loadQuotationPreset('brochures')" class="px-3.5 py-1.5 rounded-lg bg-[#F58220]/20 hover:bg-[#F58220]/40 text-orange-200 hover:text-white border border-[#F58220]/40 transition flex items-center space-x-2 shadow-sm">
+          <i class="fa-solid fa-book-open text-[#F58220]"></i>
+          <span>📚 2. Admissions: 15,000 Prospectus Brochures — Mr. Aseem Bhatnagar</span>
         </button>
-        <button onclick="loadQuotationPreset('cctv')" class="px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 transition flex items-center space-x-1.5">
-          <i class="fa-solid fa-video"></i>
-          <span>📹 3. Security Dept: 40 Night Vision IP CCTV</span>
+        <button onclick="loadQuotationPreset('cctv')" class="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/40 text-emerald-200 hover:text-white border border-emerald-500/40 transition flex items-center space-x-2 shadow-sm">
+          <i class="fa-solid fa-video text-emerald-400"></i>
+          <span>📹 3. Security: 40 Night Vision IP CCTV — Mr. Varun Rathi</span>
         </button>
       </div>
     </div>
@@ -115,91 +157,94 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
       <!-- LEFT: PROPOSAL INTAKE FORM (5 Cols) -->
-      <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <div class="lg:col-span-5 bg-[#081E44] border border-[#183E7D] rounded-xl p-5 shadow-xl space-y-4">
+        <div class="flex items-center justify-between border-b border-[#183E7D] pb-3">
           <div class="flex items-center space-x-2">
-            <i class="fa-solid fa-file-circle-plus text-indigo-400 text-sm"></i>
-            <h3 class="text-sm font-bold text-white">HoD Proposal Requisition</h3>
+            <i class="fa-solid fa-file-circle-plus text-[#F58220] text-sm"></i>
+            <h3 class="text-sm font-bold text-white">HoD Requisition & Bid Intake</h3>
           </div>
-          <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-700">Multi-Quote Ingestion</span>
+          <span class="text-[10px] bg-[#031024] text-blue-300 px-2 py-0.5 rounded border border-[#183E7D]">JKLU ERP Connected</span>
         </div>
 
         <form id="proposal-form" onsubmit="handleProposalScrutiny(event)" class="space-y-3.5">
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Select Department</label>
-            <select id="prop-dept" onchange="updateDeptMeta()" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none">
+            <label class="block text-xs font-semibold text-blue-200 mb-1">Select JKLU Department / Institute</label>
+            <select id="prop-dept" onchange="updateDeptMeta()" class="w-full bg-[#031024] border border-[#183E7D] rounded-lg p-2.5 text-xs text-white focus:border-[#F58220] focus:outline-none">
               <!-- Populated by JS with all 12 departments -->
             </select>
-            <div id="dept-budget-note" class="text-[11px] text-sky-400 mt-1 mono">Loading budget info...</div>
+            <!-- Real Sourced HoD & Budget Info Card -->
+            <div id="dept-budget-note" class="text-[11px] p-2.5 rounded-lg bg-[#031024] border border-[#183E7D] text-blue-200 mt-2 leading-relaxed">
+              Loading department leadership & budget info from jklu.edu.in...
+            </div>
           </div>
 
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Proposal Title / Procurement Item</label>
-            <input type="text" id="prop-title" required class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none" placeholder="e.g. 10 High-Performance Laptops for AI Lab">
+            <label class="block text-xs font-semibold text-blue-200 mb-1">Requisition Title / Procurement Item</label>
+            <input type="text" id="prop-title" required class="w-full bg-[#031024] border border-[#183E7D] rounded-lg p-2.5 text-xs text-white focus:border-[#F58220] focus:outline-none placeholder-blue-300/40" placeholder="e.g. 10 High-Performance Workstation Laptops for AI Lab">
           </div>
 
           <!-- Quotation Tabs Input -->
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="text-xs font-medium text-slate-300">Vendor Quotation Details (Min. 2-3 Quotes)</label>
-              <span class="text-[10px] text-slate-400">Separate with '---' or click presets</span>
+              <label class="text-xs font-semibold text-blue-200">Vendor Quotation Details (Min. 2-3 Bids)</label>
+              <span class="text-[10px] text-blue-300/70">Separate bids with '---'</span>
             </div>
-            <textarea id="prop-quotes-text" rows="10" required class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-xs text-slate-200 mono focus:border-indigo-500 focus:outline-none placeholder-slate-600" placeholder="Paste 2 or 3 competing vendor quotations separated by '---' line..."></textarea>
+            <textarea id="prop-quotes-text" rows="10" required class="w-full bg-[#031024] border border-[#183E7D] rounded-lg p-3 text-xs text-slate-200 mono focus:border-[#F58220] focus:outline-none placeholder-blue-300/30" placeholder="Paste 2 or 3 competing vendor quotations separated by '---' line..."></textarea>
           </div>
 
-          <button type="submit" id="btn-scrutinize" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-lg text-xs font-bold shadow-lg shadow-indigo-600/25 flex items-center justify-center space-x-2 transition">
+          <button type="submit" id="btn-scrutinize" class="w-full py-2.5 bg-gradient-to-r from-[#0136A1] to-[#F58220] hover:from-[#00226B] hover:to-[#D96E14] text-white rounded-lg text-xs font-bold shadow-lg shadow-orange-500/25 flex items-center justify-center space-x-2 transition">
             <i class="fa-solid fa-microchip"></i>
-            <span>Run Autonomous Scrutiny & Benchmarking</span>
+            <span>Run Autonomous Scrutiny & Market Benchmarking</span>
           </button>
         </form>
 
         <!-- ONLINE MARKET BENCHMARK SEARCH WIDGET -->
-        <div class="pt-4 border-t border-slate-800">
+        <div class="pt-4 border-t border-[#183E7D]">
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs font-bold text-white flex items-center space-x-1.5">
               <i class="fa-solid fa-globe text-sky-400"></i>
-              <span>Live Online Price Benchmark Search</span>
+              <span>Live B2B Market Benchmark Query</span>
             </span>
-            <span class="text-[10px] text-slate-400">GeM / Amazon / IndiaMART</span>
+            <span class="text-[10px] text-[#F58220] font-semibold">GeM • Amazon • IndiaMART</span>
           </div>
           <div class="flex space-x-2">
-            <input type="text" id="market-search-query" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none" placeholder="Search item (e.g. Dell Latitude 5440, Projector)">
-            <button onclick="runManualMarketSearch()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-medium">Search</button>
+            <input type="text" id="market-search-query" class="flex-1 bg-[#031024] border border-[#183E7D] rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#F58220]" placeholder="Search item (e.g. Dell Latitude 5440, Projector)">
+            <button onclick="runManualMarketSearch()" class="px-3.5 py-1.5 bg-[#0136A1] hover:bg-[#00226B] text-white rounded-lg text-xs font-medium">Search</button>
           </div>
-          <div id="market-search-result" class="mt-2 text-xs hidden p-2.5 bg-slate-950 rounded-lg border border-slate-800 mono"></div>
+          <div id="market-search-result" class="mt-2 text-xs hidden p-2.5 bg-[#031024] rounded-lg border border-[#183E7D] mono text-blue-200"></div>
         </div>
       </div>
 
       <!-- RIGHT: COMPARATIVE STATEMENT & 4-TIER APPROVAL FLOW (7 Cols) -->
       <div class="lg:col-span-7 space-y-6">
 
-        <div id="proposal-results-card" class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl hidden space-y-5">
-          <div class="flex items-start justify-between border-b border-slate-800 pb-3">
+        <div id="proposal-results-card" class="bg-[#081E44] border border-[#183E7D] rounded-xl p-5 shadow-xl hidden space-y-5">
+          <div class="flex items-start justify-between border-b border-[#183E7D] pb-3">
             <div>
               <div class="flex items-center space-x-3 mb-1">
                 <h2 id="prop-disp-title" class="text-base font-bold text-white">Proposal Title</h2>
                 <span id="prop-disp-status" class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase border bg-amber-500/10 text-amber-400 border-amber-500/30">PENDING_HOD</span>
               </div>
-              <p class="text-xs text-slate-400">Department: <span id="prop-disp-dept" class="text-indigo-400 font-semibold">IET</span> • Requisition ID: <span id="prop-disp-id" class="text-slate-200 mono font-medium">PROP-01</span></p>
+              <p class="text-xs text-blue-200/80">Department: <span id="prop-disp-dept" class="text-[#F58220] font-semibold">IET</span> • Requisition ID: <span id="prop-disp-id" class="text-slate-200 mono font-medium">PROP-01</span></p>
             </div>
             <div class="text-right">
-              <div class="text-[10px] uppercase text-slate-400 font-medium">Recommended Bid</div>
+              <div class="text-[10px] uppercase text-blue-300 font-medium">Recommended Bid</div>
               <div id="prop-disp-amount" class="text-xl font-extrabold text-emerald-400 mono">₹0.00</div>
             </div>
           </div>
 
           <!-- COMPARATIVE STATEMENT SUMMARY -->
-          <div id="prop-summary-markdown" class="p-3.5 bg-slate-950/80 border border-slate-800 rounded-lg text-xs leading-relaxed text-slate-300"></div>
+          <div id="prop-summary-markdown" class="p-3.5 bg-[#031024] border border-[#183E7D] rounded-lg text-xs leading-relaxed text-blue-100"></div>
 
           <!-- MULTI-CRITERIA QUOTATION COMPARISON TABLE -->
           <div>
             <div class="text-xs font-bold text-white mb-2 flex items-center justify-between">
-              <span>Multi-Factor Evaluation Matrix (Weighted Scoring)</span>
-              <span class="text-[10px] text-slate-400">Commercial 40% • Delivery 20% • Warranty 20% • Service 20%</span>
+              <span>JKLU Multi-Factor Evaluation Matrix (Weighted Scoring)</span>
+              <span class="text-[10px] text-blue-300/80">Commercial 40% • Delivery 20% • Warranty 20% • Service SLA 20%</span>
             </div>
-            <div class="overflow-x-auto border border-slate-800 rounded-lg">
+            <div class="overflow-x-auto border border-[#183E7D] rounded-lg">
               <table class="w-full text-left text-xs">
-                <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] mono border-b border-slate-800">
+                <thead class="bg-[#031024] text-blue-300 uppercase text-[10px] mono border-b border-[#183E7D]">
                   <tr>
                     <th class="p-2.5">Vendor Bidder</th>
                     <th class="p-2.5">Total (₹)</th>
@@ -210,7 +255,7 @@
                     <th class="p-2.5">Verdict</th>
                   </tr>
                 </thead>
-                <tbody id="quotation-comparison-tbody" class="divide-y divide-slate-800/80">
+                <tbody id="quotation-comparison-tbody" class="divide-y divide-[#183E7D]/80">
                   <!-- Populated by JS -->
                 </tbody>
               </table>
@@ -220,12 +265,12 @@
           <!-- ONLINE MARKET PRICE BENCHMARKING TABLE -->
           <div>
             <div class="text-xs font-bold text-white mb-2 flex items-center justify-between">
-              <span>Online Platform Market Price Verification</span>
-              <span class="text-[10px] text-sky-400 font-medium">GeM Portal • Amazon Business • IndiaMART</span>
+              <span>Online Market Price Verification & Benchmark</span>
+              <span class="text-[10px] text-[#F58220] font-semibold">GeM Portal • Amazon Business • IndiaMART</span>
             </div>
-            <div class="overflow-x-auto border border-slate-800 rounded-lg">
+            <div class="overflow-x-auto border border-[#183E7D] rounded-lg">
               <table class="w-full text-left text-xs">
-                <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] mono border-b border-slate-800">
+                <thead class="bg-[#031024] text-blue-300 uppercase text-[10px] mono border-b border-[#183E7D]">
                   <tr>
                     <th class="p-2.5">Item Name</th>
                     <th class="p-2.5">Quoted Unit Price</th>
@@ -235,18 +280,21 @@
                     <th class="p-2.5">Market Source</th>
                   </tr>
                 </thead>
-                <tbody id="market-bench-tbody" class="divide-y divide-slate-800/80">
+                <tbody id="market-bench-tbody" class="divide-y divide-[#183E7D]/80">
                   <!-- Populated by JS -->
                 </tbody>
               </table>
             </div>
           </div>
 
-          <!-- 4-STEP INSTITUTIONAL APPROVAL STEPPER -->
-          <div class="pt-4 border-t border-slate-800">
+          <!-- 4-STEP INSTITUTIONAL APPROVAL STEPPER WITH OFFICIAL JKLU OFFICERS -->
+          <div class="pt-4 border-t border-[#183E7D]">
             <div class="flex items-center justify-between mb-3">
-              <div class="text-xs font-bold text-white">4-Tier Institutional Governance Workflow</div>
-              <span class="text-[11px] text-slate-400">Expense > ₹20,000 Approval Gate</span>
+              <div class="text-xs font-bold text-white flex items-center space-x-2">
+                <span>JKLU 4-Tier Institutional Governance Workflow</span>
+                <span class="text-[10px] bg-[#0136A1] text-white px-2 py-0.5 rounded font-mono">Mandatory Approval Gate</span>
+              </div>
+              <span class="text-[11px] text-[#F58220] font-semibold">Expense > ₹20,000 Threshold</span>
             </div>
 
             <div id="prop-approval-stepper" class="grid grid-cols-4 gap-2 text-center text-xs mb-4">
@@ -254,23 +302,23 @@
             </div>
 
             <!-- Action Buttons for Current Approver -->
-            <div id="prop-action-box" class="bg-slate-950 p-4 rounded-lg border border-slate-800 flex items-center justify-between">
+            <div id="prop-action-box" class="bg-[#031024] p-4 rounded-lg border border-[#183E7D] flex items-center justify-between">
               <div>
                 <div id="action-role-title" class="text-xs font-bold text-white">Step Sign-off Action</div>
-                <div id="action-role-desc" class="text-[11px] text-slate-400">Review scrutiny matrix and approve to advance proposal.</div>
+                <div id="action-role-desc" class="text-[11px] text-blue-200/80">Authorize proposal to forward to the next institutional governance gate.</div>
               </div>
               <div class="flex space-x-2">
-                <button onclick="submitProposalDecision(true)" id="btn-prop-approve" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold">Approve & Advance</button>
-                <button onclick="submitProposalDecision(false)" id="btn-prop-reject" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded text-xs font-bold">Reject</button>
+                <button onclick="submitProposalDecision(true)" id="btn-prop-approve" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold shadow-md shadow-emerald-600/30">Approve & Advance</button>
+                <button onclick="submitProposalDecision(false)" id="btn-prop-reject" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded text-xs font-bold shadow-md shadow-rose-600/30">Reject</button>
               </div>
             </div>
           </div>
         </div>
 
-        <div id="prop-placeholder" class="bg-slate-900 border border-slate-800 rounded-xl p-12 text-center text-slate-400 shadow-xl">
-          <i class="fa-solid fa-file-contract text-4xl mb-3 text-slate-600"></i>
-          <h3 class="text-base font-bold text-slate-200 mb-1">No Proposal Analyzed</h3>
-          <p class="text-xs max-w-md mx-auto text-slate-400">Select a preset above (e.g. 10 Workstation Laptops for IET) or paste multiple vendor quotations to initiate the autonomous scrutiny and market price check.</p>
+        <div id="prop-placeholder" class="bg-[#081E44] border border-[#183E7D] rounded-xl p-12 text-center text-blue-200/60 shadow-xl">
+          <i class="fa-solid fa-file-contract text-4xl mb-3 text-blue-400/40"></i>
+          <h3 class="text-base font-bold text-white mb-1">No Requisition Analyzed Yet</h3>
+          <p class="text-xs max-w-md mx-auto text-blue-200/70">Select any JKLU preset above (e.g. 10 Workstation Laptops for IET) or paste multiple vendor quotations to initiate the autonomous Maker scrutiny, MCDA matrix, and online benchmark check.</p>
         </div>
 
       </div>
@@ -280,15 +328,15 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- PHASE 2: INVOICE 3-WAY MATCHING & SETTLEMENT (Existing Invoice Engine)    -->
+  <!-- PHASE 2: INVOICE 3-WAY MATCHING & SETTLEMENT                              -->
   <!-- ========================================================================= -->
   <div id="section-invoices" class="p-6 space-y-6 flex-1 hidden">
 
     <!-- JURY TEST SCENARIOS BAR -->
-    <section class="bg-slate-900 border border-slate-800/80 rounded-xl px-4 py-2.5 flex items-center justify-between overflow-x-auto text-xs">
-      <div class="flex items-center space-x-2 text-slate-400 font-medium shrink-0 mr-2">
-        <i class="fa-solid fa-vial text-indigo-400"></i>
-        <span>Jury Demo Scenarios:</span>
+    <section class="bg-[#081E44] border border-[#183E7D] rounded-xl px-4 py-2.5 flex items-center justify-between overflow-x-auto text-xs shadow-md">
+      <div class="flex items-center space-x-2 text-blue-200 font-semibold shrink-0 mr-2">
+        <i class="fa-solid fa-vial text-[#F58220]"></i>
+        <span>Jury Evaluation Scenarios:</span>
       </div>
       <div class="flex items-center space-x-2 shrink-0">
         <button onclick="loadScenario('clean')" class="px-2.5 py-1 rounded bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition">🟢 1. Clean Delivery</button>
@@ -301,22 +349,22 @@
     </section>
 
     <!-- MAKER-CHECKER ROLE TABS -->
-    <div class="bg-slate-900/60 border border-slate-800 rounded-xl px-4 py-2 flex items-center space-x-4">
-      <div class="text-xs uppercase font-semibold tracking-wider text-slate-400 mr-2">Active View:</div>
+    <div class="bg-[#081E44] border border-[#183E7D] rounded-xl px-4 py-2 flex items-center space-x-4 shadow-md">
+      <div class="text-xs uppercase font-semibold tracking-wider text-blue-300 mr-2">Active Checker View:</div>
       <div class="flex space-x-2">
-        <button id="tab-maker" onclick="switchRole('maker')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-indigo-600 text-white shadow-sm shadow-indigo-500/30">
-          <i class="fa-solid fa-robot"></i>
+        <button id="tab-maker" onclick="switchRole('maker')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-[#0136A1] text-white shadow-sm shadow-blue-900/40">
+          <i class="fa-solid fa-robot text-[#F58220]"></i>
           <span>🤖 AI Agent Maker</span>
         </button>
-        <button id="tab-procurement" onclick="switchRole('procurement')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700">
+        <button id="tab-procurement" onclick="switchRole('procurement')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-[#031024] text-blue-200 hover:text-white hover:bg-[#0D2E68] border border-[#183E7D]">
           <i class="fa-solid fa-boxes-packing text-amber-400"></i>
           <span>📦 Procurement Officer View</span>
         </button>
-        <button id="tab-accounts" onclick="switchRole('accounts')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700">
+        <button id="tab-accounts" onclick="switchRole('accounts')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-[#031024] text-blue-200 hover:text-white hover:bg-[#0D2E68] border border-[#183E7D]">
           <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i>
           <span>💰 Accounts Division View</span>
         </button>
-        <button id="tab-department" onclick="switchRole('department')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700">
+        <button id="tab-department" onclick="switchRole('department')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-[#031024] text-blue-200 hover:text-white hover:bg-[#0D2E68] border border-[#183E7D]">
           <i class="fa-solid fa-building-columns text-sky-400"></i>
           <span>🏢 Respective Department View</span>
         </button>
@@ -330,28 +378,28 @@
       <div class="lg:col-span-5 space-y-6">
 
         <!-- INVOICE INTAKE CARD -->
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl">
+        <div class="bg-[#081E44] border border-[#183E7D] rounded-xl p-5 shadow-xl">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center space-x-2">
-              <i class="fa-solid fa-cloud-arrow-up text-indigo-400"></i>
-              <h2 class="text-sm font-bold text-white">Invoice Intake Gateway</h2>
+              <i class="fa-solid fa-cloud-arrow-up text-[#F58220]"></i>
+              <h2 class="text-sm font-bold text-white">Invoice Ingestion Gateway</h2>
             </div>
-            <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-700">Multi-Channel</span>
+            <span class="text-[10px] bg-[#031024] text-blue-300 px-2 py-0.5 rounded border border-[#183E7D]">PDF / OCR / Text</span>
           </div>
 
           <form id="intake-form" onsubmit="handleIntake(event)" class="space-y-3">
             <div>
-              <label class="block text-xs font-medium text-slate-300 mb-1">Invoice Text / EDI Stream</label>
-              <textarea id="invoice-text" rows="5" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 mono focus:border-indigo-500 focus:outline-none placeholder-slate-600" placeholder="Paste Tax Invoice text or click any Jury Demo Scenario above..."></textarea>
+              <label class="block text-xs font-semibold text-blue-200 mb-1">Invoice Text / EDI Stream</label>
+              <textarea id="invoice-text" rows="5" class="w-full bg-[#031024] border border-[#183E7D] rounded-lg p-2.5 text-xs text-slate-200 mono focus:border-[#F58220] focus:outline-none placeholder-blue-300/30" placeholder="Paste Tax Invoice text or click any Jury Demo Scenario above..."></textarea>
             </div>
 
             <div class="flex items-center space-x-3">
-              <label class="flex-1 cursor-pointer bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 border-dashed rounded-lg py-2 px-3 flex items-center justify-center space-x-2 text-xs text-slate-300 transition">
+              <label class="flex-1 cursor-pointer bg-[#031024] hover:bg-[#0A2350] border border-[#183E7D] border-dashed rounded-lg py-2 px-3 flex items-center justify-center space-x-2 text-xs text-blue-200 transition">
                 <i class="fa-solid fa-file-pdf text-rose-400"></i>
                 <span id="file-label">Upload PDF / Scan</span>
                 <input type="file" id="invoice-file" accept=".pdf,image/*" class="hidden" onchange="fileSelected(this)">
               </label>
-              <button type="submit" id="btn-submit" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-lg text-xs font-semibold shadow-lg shadow-indigo-600/25 flex items-center space-x-1.5 transition">
+              <button type="submit" id="btn-submit" class="px-4 py-2 bg-gradient-to-r from-[#0136A1] to-[#F58220] hover:from-[#00226B] hover:to-[#D96E14] text-white rounded-lg text-xs font-bold shadow-lg shadow-orange-500/25 flex items-center space-x-1.5 transition">
                 <i class="fa-solid fa-play"></i>
                 <span>Run Agent Maker</span>
               </button>
@@ -360,19 +408,19 @@
         </div>
 
         <!-- GLASS-BOX OBSERVABILITY CONSOLE -->
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl flex flex-col h-[520px]">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+        <div class="bg-[#081E44] border border-[#183E7D] rounded-xl p-5 shadow-xl flex flex-col h-[520px]">
+          <div class="flex items-center justify-between pb-3 border-b border-[#183E7D] mb-3">
             <div class="flex items-center space-x-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 pulse-amber"></span>
-              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">Glass-Box Agent Reasoning Logs</h3>
+              <span class="w-2.5 h-2.5 rounded-full bg-[#F58220] pulse-orange"></span>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-white">Glass-Box Agent Reasoning Logs</h3>
             </div>
-            <span class="text-[10px] text-slate-400 mono">ReAct • MCP Tools • Reflection</span>
+            <span class="text-[10px] text-blue-300 mono">ReAct • MCP Tools • Reflection</span>
           </div>
 
           <div id="agent-logs" class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs mono">
-            <div class="text-slate-500 text-center py-10">
-              <i class="fa-solid fa-terminal text-2xl mb-2 opacity-50"></i>
-              <p>Agent is standing by. Ingest an invoice to view live autonomous planning, MCP tool calls, and reflection traces.</p>
+            <div class="text-blue-300/50 text-center py-10">
+              <i class="fa-solid fa-terminal text-2xl mb-2 opacity-40"></i>
+              <p>Agent is standing by. Ingest an invoice or quotation to view autonomous ReAct planning, MCP tool execution, and reflection traces.</p>
             </div>
           </div>
         </div>
@@ -383,38 +431,38 @@
       <div class="lg:col-span-7 space-y-6">
 
         <!-- CURRENT AUDITED INVOICE HEADER -->
-        <div id="invoice-header-card" class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl hidden">
+        <div id="invoice-header-card" class="bg-[#081E44] border border-[#183E7D] rounded-xl p-5 shadow-xl hidden">
           <div class="flex items-start justify-between">
             <div>
               <div class="flex items-center space-x-3 mb-1">
                 <h2 id="disp-inv-no" class="text-lg font-bold text-white mono">INV-001</h2>
                 <span id="disp-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase border">PENDING</span>
-                <span id="disp-confidence-badge" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 mono border border-slate-700">Confidence: 1.00</span>
+                <span id="disp-confidence-badge" class="px-2 py-0.5 rounded text-[10px] bg-[#031024] text-blue-200 mono border border-[#183E7D]">Confidence: 1.00</span>
               </div>
-              <p class="text-xs text-slate-400">Vendor: <span id="disp-vendor-name" class="text-slate-200 font-medium">Sharma Lab Supplies</span> • Ref PO: <span id="disp-po-no" class="text-indigo-400 font-semibold mono">PO-1001</span></p>
+              <p class="text-xs text-blue-200/80">Vendor: <span id="disp-vendor-name" class="text-white font-medium">Sharma Lab Supplies</span> • Ref PO: <span id="disp-po-no" class="text-[#F58220] font-semibold mono">PO-1001</span></p>
             </div>
             <div class="text-right">
-              <div class="text-[10px] uppercase text-slate-400 font-medium">Gross Total</div>
+              <div class="text-[10px] uppercase text-blue-300 font-medium">Gross Total</div>
               <div id="disp-total" class="text-xl font-extrabold text-white mono">₹31,860.00</div>
             </div>
           </div>
 
           <!-- MAKER VERDICT BOX -->
-          <div id="maker-verdict-box" class="mt-4 p-3.5 bg-slate-950/80 border border-slate-800 rounded-lg text-xs leading-relaxed text-slate-300"></div>
+          <div id="maker-verdict-box" class="mt-4 p-3.5 bg-[#031024] border border-[#183E7D] rounded-lg text-xs leading-relaxed text-blue-100"></div>
 
           <!-- DoA APPROVAL STEPPER -->
-          <div class="mt-4 pt-4 border-t border-slate-800">
-            <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Delegation of Authority (DoA) Approval Chain</div>
+          <div class="mt-4 pt-4 border-t border-[#183E7D]">
+            <div class="text-[11px] font-semibold uppercase tracking-wider text-blue-300 mb-2">Delegation of Authority (DoA) Approval Chain</div>
             <div id="doa-stepper" class="flex items-center space-x-2"></div>
           </div>
         </div>
 
         <!-- VIEW 1: PROCUREMENT OFFICER CHECKER VIEW -->
-        <div id="view-procurement" class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl hidden space-y-4">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div id="view-procurement" class="bg-[#081E44] border border-[#183E7D] rounded-xl p-5 shadow-xl hidden space-y-4">
+          <div class="flex items-center justify-between border-b border-[#183E7D] pb-3">
             <div class="flex items-center space-x-2">
               <i class="fa-solid fa-boxes-packing text-amber-400 text-base"></i>
-              <h3 class="text-sm font-bold text-white">Checker View: Procurement Officer</h3>
+              <h3 class="text-sm font-bold text-white">Checker View: Procurement Officer (JKLU Administration)</h3>
             </div>
             <span class="text-xs bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">PO Fulfillment & 3-Way Match</span>
           </div>
@@ -423,10 +471,10 @@
 
           <!-- 3-WAY MATCHING RECONCILIATION TABLE -->
           <div>
-            <div class="text-xs font-semibold text-slate-300 mb-2">Line-by-Line 3-Way Reconciliation Matrix</div>
-            <div class="overflow-x-auto border border-slate-800 rounded-lg">
+            <div class="text-xs font-semibold text-blue-200 mb-2">Line-by-Line 3-Way Reconciliation Matrix</div>
+            <div class="overflow-x-auto border border-[#183E7D] rounded-lg">
               <table class="w-full text-left text-xs">
-                <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] mono border-b border-slate-800">
+                <thead class="bg-[#031024] text-blue-300 uppercase text-[10px] mono border-b border-[#183E7D]">
                   <tr>
                     <th class="p-2.5">Item Code</th>
                     <th class="p-2.5">Ordered (PO)</th>
@@ -437,15 +485,15 @@
                     <th class="p-2.5">Variance</th>
                   </tr>
                 </thead>
-                <tbody id="matrix-tbody" class="divide-y divide-slate-800/80"></tbody>
+                <tbody id="matrix-tbody" class="divide-y divide-[#183E7D]/80"></tbody>
               </table>
             </div>
           </div>
 
-          <div class="bg-slate-950 p-3.5 rounded-lg border border-slate-800 flex items-center justify-between">
+          <div class="bg-[#031024] p-3.5 rounded-lg border border-[#183E7D] flex items-center justify-between">
             <div>
               <div class="text-xs font-semibold text-white">Procurement Verification Sign-off</div>
-              <div class="text-[11px] text-slate-400">Confirm goods receipt against purchase order specifications.</div>
+              <div class="text-[11px] text-blue-200/70">Confirm goods receipt against purchase order specifications.</div>
             </div>
             <div class="flex space-x-2">
               <button onclick="submitDecision('DEPARTMENT_HEAD', true)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-semibold">Confirm Delivery</button>
@@ -455,8 +503,8 @@
         </div>
 
         <!-- VIEW 2: ACCOUNTS DIVISION CHECKER VIEW -->
-        <div id="view-accounts" class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl hidden space-y-4">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div id="view-accounts" class="bg-[#081E44] border border-[#183E7D] rounded-xl p-5 shadow-xl hidden space-y-4">
+          <div class="flex items-center justify-between border-b border-[#183E7D] pb-3">
             <div class="flex items-center space-x-2">
               <i class="fa-solid fa-file-invoice-dollar text-emerald-400 text-base"></i>
               <h3 class="text-sm font-bold text-white">Checker View: Accounts Division (Payable & Tax)</h3>
@@ -467,28 +515,28 @@
           <div id="accounts-alerts" class="space-y-2"></div>
 
           <div class="grid grid-cols-2 gap-4">
-            <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+            <div class="bg-[#031024] p-4 rounded-lg border border-[#183E7D]">
               <div class="text-xs font-bold text-white mb-2 flex items-center justify-between">
                 <span>Compliance & Optimization</span>
-                <i class="fa-solid fa-shield-halved text-indigo-400"></i>
+                <i class="fa-solid fa-shield-halved text-[#F58220]"></i>
               </div>
               <div class="space-y-2 text-xs">
                 <div class="flex justify-between">
-                  <span class="text-slate-400">MSME Statutory Due:</span>
+                  <span class="text-blue-300">MSME Statutory Due:</span>
                   <span id="acc-msme-due" class="font-medium text-white mono">-</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-slate-400">Early-Pay Discount:</span>
+                  <span class="text-blue-300">Early-Pay Discount:</span>
                   <span id="acc-discount-saving" class="font-bold text-emerald-400 mono">₹0.00</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-slate-400">Scheduled Pay Date:</span>
+                  <span class="text-blue-300">Scheduled Pay Date:</span>
                   <span id="acc-pay-on" class="font-medium text-white mono">-</span>
                 </div>
               </div>
             </div>
 
-            <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+            <div class="bg-[#031024] p-4 rounded-lg border border-[#183E7D]">
               <div class="text-xs font-bold text-white mb-2 flex items-center justify-between">
                 <span>Double-Entry Ledger Draft</span>
                 <span class="text-[10px] text-emerald-400 mono">Balanced</span>
@@ -497,21 +545,21 @@
             </div>
           </div>
 
-          <div class="bg-slate-950 p-3.5 rounded-lg border border-slate-800 flex items-center justify-between">
+          <div class="bg-[#031024] p-3.5 rounded-lg border border-[#183E7D] flex items-center justify-between">
             <div>
               <div class="text-xs font-semibold text-white">Finance Controller Sign-off & Disbursement</div>
-              <div class="text-[11px] text-slate-400">Authorizes Accounts Payable liability posting and treasury payment release.</div>
+              <div class="text-[11px] text-blue-200/70">Authorizes Accounts Payable liability posting and treasury payment release.</div>
             </div>
             <div class="flex space-x-2">
-              <button onclick="submitDecision('FINANCE_CONTROLLER', true)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-semibold">Approve AP Ledger</button>
-              <button onclick="executePaymentNow()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded text-xs font-semibold">Disburse Bank Payout</button>
+              <button onclick="submitDecision('FINANCE_CONTROLLER', true)" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold">Approve AP Ledger</button>
+              <button onclick="executePaymentNow()" class="px-3.5 py-1.5 bg-[#0136A1] hover:bg-[#00226B] text-white rounded text-xs font-bold">Disburse Bank Payout</button>
             </div>
           </div>
         </div>
 
         <!-- VIEW 3: RESPECTIVE DEPARTMENT CHECKER VIEW -->
-        <div id="view-department" class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl hidden space-y-4">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div id="view-department" class="bg-[#081E44] border border-[#183E7D] rounded-xl p-5 shadow-xl hidden space-y-4">
+          <div class="flex items-center justify-between border-b border-[#183E7D] pb-3">
             <div class="flex items-center space-x-2">
               <i class="fa-solid fa-building-columns text-sky-400 text-base"></i>
               <h3 class="text-sm font-bold text-white">Checker View: Respective Department</h3>
@@ -521,50 +569,50 @@
 
           <div id="department-alerts" class="space-y-2"></div>
 
-          <div class="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-3">
+          <div class="bg-[#031024] p-4 rounded-lg border border-[#183E7D] space-y-3">
             <div class="flex justify-between items-center text-xs">
               <span class="font-bold text-white">Department Fiscal Budget Utilization</span>
-              <span id="dept-util-pct" class="font-bold mono text-sky-400">0%</span>
+              <span id="dept-util-pct" class="font-bold mono text-[#F58220]">0%</span>
             </div>
-            <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
-              <div id="dept-util-bar" class="bg-gradient-to-r from-sky-500 to-indigo-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            <div class="w-full bg-[#081E44] h-3 rounded-full overflow-hidden border border-[#183E7D]">
+              <div id="dept-util-bar" class="bg-gradient-to-r from-[#0136A1] via-sky-500 to-[#F58220] h-full rounded-full transition-all duration-500" style="width: 0%"></div>
             </div>
             <div class="grid grid-cols-4 gap-2 pt-2 text-center text-xs">
-              <div class="p-2 bg-slate-900/60 rounded border border-slate-800/80">
-                <div class="text-[10px] text-slate-400 uppercase">Allocated</div>
+              <div class="p-2 bg-[#081E44] rounded border border-[#183E7D]">
+                <div class="text-[10px] text-blue-300 uppercase">Allocated</div>
                 <div id="dept-allocated" class="font-bold text-white mono mt-0.5">₹0.00</div>
               </div>
-              <div class="p-2 bg-slate-900/60 rounded border border-slate-800/80">
-                <div class="text-[10px] text-slate-400 uppercase">Actual Spend</div>
+              <div class="p-2 bg-[#081E44] rounded border border-[#183E7D]">
+                <div class="text-[10px] text-blue-300 uppercase">Actual Spend</div>
                 <div id="dept-actual" class="font-bold text-emerald-400 mono mt-0.5">₹0.00</div>
               </div>
-              <div class="p-2 bg-slate-900/60 rounded border border-slate-800/80">
-                <div class="text-[10px] text-slate-400 uppercase">Encumbered</div>
-                <div id="dept-committed" class="font-bold text-amber-400 mono mt-0.5">₹0.00</div>
+              <div class="p-2 bg-[#081E44] rounded border border-[#183E7D]">
+                <div class="text-[10px] text-blue-300 uppercase">Encumbered</div>
+                <div id="dept-committed" class="font-bold text-[#F58220] mono mt-0.5">₹0.00</div>
               </div>
-              <div class="p-2 bg-slate-900/60 rounded border border-slate-800/80">
-                <div class="text-[10px] text-slate-400 uppercase">Available</div>
+              <div class="p-2 bg-[#081E44] rounded border border-[#183E7D]">
+                <div class="text-[10px] text-blue-300 uppercase">Available</div>
                 <div id="dept-available" class="font-bold text-sky-400 mono mt-0.5">₹0.00</div>
               </div>
             </div>
           </div>
 
-          <div class="bg-slate-950 p-3.5 rounded-lg border border-slate-800 flex items-center justify-between">
+          <div class="bg-[#031024] p-3.5 rounded-lg border border-[#183E7D] flex items-center justify-between">
             <div>
               <div class="text-xs font-semibold text-white">Department Head Budget Authorization</div>
-              <div class="text-[11px] text-slate-400">Verifies departmental requisition and authorizes encumbrance release.</div>
+              <div class="text-[11px] text-blue-200/70">Verifies departmental requisition and authorizes encumbrance release.</div>
             </div>
             <div class="flex space-x-2">
-              <button onclick="submitDecision('DEPARTMENT_HEAD', true)" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded text-xs font-semibold">Authorize Budget Charge</button>
-              <button onclick="submitDecision('DEPARTMENT_HEAD', false)" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded text-xs font-semibold">Reject Charge</button>
+              <button onclick="submitDecision('DEPARTMENT_HEAD', true)" class="px-3.5 py-1.5 bg-[#0136A1] hover:bg-[#00226B] text-white rounded text-xs font-semibold">Authorize Budget Charge</button>
+              <button onclick="submitDecision('DEPARTMENT_HEAD', false)" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded text-xs font-semibold">Reject Charge</button>
             </div>
           </div>
         </div>
 
-        <div id="no-invoice-placeholder" class="bg-slate-900 border border-slate-800 rounded-xl p-12 text-center text-slate-400 shadow-xl">
-          <i class="fa-solid fa-file-invoice text-4xl mb-3 text-slate-600"></i>
-          <h3 class="text-base font-bold text-slate-200 mb-1">No Invoice Selected</h3>
-          <p class="text-xs max-w-md mx-auto text-slate-400">Select any pre-configured Jury Demo Scenario or upload an invoice document to initiate the autonomous Maker-Checker audit.</p>
+        <div id="no-invoice-placeholder" class="bg-[#081E44] border border-[#183E7D] rounded-xl p-12 text-center text-blue-200/60 shadow-xl">
+          <i class="fa-solid fa-file-invoice text-4xl mb-3 text-blue-400/40"></i>
+          <h3 class="text-base font-bold text-white mb-1">No Invoice Selected</h3>
+          <p class="text-xs max-w-md mx-auto text-blue-200/70">Select any pre-configured Jury Evaluation Scenario above or upload an invoice document to initiate the autonomous Maker-Checker audit.</p>
         </div>
 
       </div>
@@ -574,20 +622,20 @@
   </div>
 
   <!-- GEMINI API KEY MODAL -->
-  <div id="key-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-    <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-md w-full p-6 shadow-2xl">
+  <div id="key-modal" class="fixed inset-0 bg-[#031024]/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-[#081E44] border border-[#183E7D] rounded-xl max-w-md w-full p-6 shadow-2xl">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-sm font-bold text-white flex items-center space-x-2">
-          <i class="fa-solid fa-key text-indigo-400"></i>
+          <i class="fa-solid fa-key text-[#F58220]"></i>
           <span>Configure Gemini API Key</span>
         </h3>
-        <button onclick="closeApiKeyModal()" class="text-slate-400 hover:text-white">&times;</button>
+        <button onclick="closeApiKeyModal()" class="text-blue-300 hover:text-white">&times;</button>
       </div>
-      <p class="text-xs text-slate-400 mb-3">Provide your Google Gemini API key to activate Multimodal Vision OCR and intelligent Maker reflection. If omitted, the deterministic fallback engine executes automatically.</p>
-      <input type="password" id="modal-api-key" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white mono focus:border-indigo-500 focus:outline-none mb-4" placeholder="AIzaSy...">
+      <p class="text-xs text-blue-200/80 mb-3">Provide your Google Gemini API key to activate Multimodal Vision OCR and intelligent Maker reflection. If omitted, the deterministic fallback engine executes automatically.</p>
+      <input type="password" id="modal-api-key" class="w-full bg-[#031024] border border-[#183E7D] rounded-lg p-2.5 text-xs text-white mono focus:border-[#F58220] focus:outline-none mb-4" placeholder="AIzaSy...">
       <div class="flex justify-end space-x-2">
-        <button onclick="closeApiKeyModal()" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded text-xs">Cancel</button>
-        <button onclick="saveApiKey()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-semibold">Save Key</button>
+        <button onclick="closeApiKeyModal()" class="px-3 py-1.5 bg-[#031024] border border-[#183E7D] text-blue-200 rounded text-xs">Cancel</button>
+        <button onclick="saveApiKey()" class="px-3.5 py-1.5 bg-[#F58220] hover:bg-[#D96E14] text-white rounded text-xs font-semibold">Save Key</button>
       </div>
     </div>
   </div>
@@ -606,17 +654,17 @@
       if (mode === 'quotations') {
         document.getElementById('section-quotations').classList.remove('hidden');
         document.getElementById('section-invoices').classList.add('hidden');
-        document.getElementById('btn-mode-quotations').className = 'px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-2 bg-indigo-600 text-white shadow-lg shadow-indigo-500/30';
-        document.getElementById('btn-mode-invoices').className = 'px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-2 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700';
+        document.getElementById('btn-mode-quotations').className = 'px-4 py-2 rounded-lg text-xs font-bold transition flex items-center space-x-2 bg-[#F58220] text-white shadow-lg shadow-orange-500/25';
+        document.getElementById('btn-mode-invoices').className = 'px-4 py-2 rounded-lg text-xs font-bold transition flex items-center space-x-2 bg-[#0A2350] text-blue-200 hover:text-white hover:bg-[#0D2E68] border border-[#183E7D]';
       } else {
         document.getElementById('section-quotations').classList.add('hidden');
         document.getElementById('section-invoices').classList.remove('hidden');
-        document.getElementById('btn-mode-quotations').className = 'px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-2 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700';
-        document.getElementById('btn-mode-invoices').className = 'px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-2 bg-indigo-600 text-white shadow-lg shadow-indigo-500/30';
+        document.getElementById('btn-mode-quotations').className = 'px-4 py-2 rounded-lg text-xs font-bold transition flex items-center space-x-2 bg-[#0A2350] text-blue-200 hover:text-white hover:bg-[#0D2E68] border border-[#183E7D]';
+        document.getElementById('btn-mode-invoices').className = 'px-4 py-2 rounded-lg text-xs font-bold transition flex items-center space-x-2 bg-[#0136A1] text-white shadow-lg shadow-blue-900/40 border border-[#0136A1]';
       }
     }
 
-    // --- LOAD ALL 12 UNIVERSITY DEPARTMENTS ---
+    // --- LOAD ALL 12 UNIVERSITY DEPARTMENTS & SOURCED HODS FROM JKLU.EDU.IN ---
     async function loadDepartments() {
       try {
         const res = await fetch('/departments');
@@ -637,16 +685,26 @@
       const dept = allDepartments.find(d => d.code === code);
       if (dept) {
         document.getElementById('dept-budget-note').innerHTML = `
-          <b>HoD:</b> ${dept.hod} • <b>Budget Available:</b> ₹${Number(dept.available).toLocaleString('en-IN')} (Allocated: ₹${Number(dept.allocated).toLocaleString('en-IN')})
+          <div class="font-bold text-white mb-0.5 flex items-center space-x-2">
+            <span>🏛️ ${dept.name}</span>
+          </div>
+          <div class="text-blue-100/90 mb-1">
+            <span class="text-[#F58220] font-semibold">👤 HoD / Dean (jklu.edu.in):</span> <b>${dept.hod}</b>
+          </div>
+          <div class="text-[10px] text-blue-300 mono flex items-center space-x-3">
+            <span>💰 <b>Available:</b> <span class="text-emerald-400 font-bold">₹${Number(dept.available).toLocaleString('en-IN')}</span></span>
+            <span>•</span>
+            <span>Allocated: ₹${Number(dept.allocated).toLocaleString('en-IN')}</span>
+          </div>
         `;
       }
     }
 
-    // --- QUOTATION PRESETS ---
+    // --- QUOTATION PRESETS (JKLU DEPARTMENTS & REALISTIC CAMPUS REQUIREMENTS) ---
     const QUOTATION_PRESETS = {
       laptops: {
         dept: 'IET',
-        title: '10 High-Performance Workstation Laptops for AI & Computing Lab',
+        title: '10 High-Performance Workstation Laptops for IET AI & Robotics Computing Lab',
         quotes: `TAX QUOTATION
 Vendor: Dell India Enterprise Solutions
 Item: Dell Latitude 5440 Core i5 16GB 512GB SSD
@@ -691,7 +749,7 @@ Payment Terms: 30 Days Net`
       },
       brochures: {
         dept: 'ADM',
-        title: '15,000 Copies of University Admissions Prospectus & Information Brochure 2026-27',
+        title: '15,000 Copies of JKLU Admissions Prospectus & Academic Brochure 2026-27',
         quotes: `TAX QUOTATION
 Vendor: Modern University Press & Printers
 Item: A4 24-Page Multi-color Prospectus Brochure 170 GSM Art Card
@@ -722,7 +780,7 @@ Payment Terms: 50% Advance`
       },
       cctv: {
         dept: 'SEC',
-        title: '40 Outdoor Night-Vision 5MP IP Dome Cameras for Campus Perimeter',
+        title: '40 Outdoor Night-Vision 5MP IP Dome Cameras for Campus Perimeter Vigilance',
         quotes: `TAX QUOTATION
 Vendor: CampusTech Services LLP
 Item: 5MP IP Dome Camera Night Vision 30m PoE
@@ -748,7 +806,7 @@ GST 18%: 23,400.00
 Total: 153,400.00
 Delivery: 18 days
 Warranty: 1 year
-Service: Manufacturer standard warranty
+Service: Manufacturer standard carry-in warranty
 Payment Terms: 100% on delivery`
       }
     };
@@ -790,81 +848,76 @@ Payment Terms: 100% on delivery`
       document.getElementById('proposal-results-card').classList.remove('hidden');
 
       document.getElementById('prop-disp-title').textContent = p.title;
+      document.getElementById('prop-disp-status').textContent = p.status || 'PENDING_HOD';
       document.getElementById('prop-disp-dept').textContent = p.department;
       document.getElementById('prop-disp-id').textContent = p.id;
-      document.getElementById('prop-disp-status').textContent = p.status;
+      document.getElementById('prop-disp-amount').textContent = '₹' + Number(p.recommended_amount).toLocaleString('en-IN', {minimumFractionDigits: 2});
 
-      // Recommended quote
-      const recQ = p.quotations.find(q => q.recommendation_badge && q.recommendation_badge.includes('Recommended')) || p.quotations[0];
-      document.getElementById('prop-disp-amount').textContent = '₹' + Number(recQ.total_amount).toLocaleString('en-IN', {minimumFractionDigits: 2});
+      // Comparative Statement Markdown
+      document.getElementById('prop-summary-markdown').innerHTML = (p.comparative_statement_markdown || '')
+        .replace(/### (.*)/g, '<div class="font-bold text-white text-sm mb-1.5">$1</div>')
+        .replace(/#### (.*)/g, '<div class="font-semibold text-[#F58220] mt-2 mb-1">$1</div>')
+        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+        .replace(/- (.*)/g, '<div class="text-blue-100 mb-0.5">• $1</div>');
 
-      // Executive Summary
-      document.getElementById('prop-summary-markdown').innerHTML = (
-        `### 📋 Executive Scrutiny Dossier for HoD & Purchase Officer
-        - **Total Competing Bids Analyzed:** ${p.quotations.length} Vendor Proposals
-        - **Recommended Selection:** <b>${recQ.vendor_name}</b> (Composite Score: <b>${recQ.total_score} / 100</b>)
-        - **Value Justification:** Combines competitive pricing (₹${Number(recQ.total_amount).toLocaleString('en-IN')}) with <b>${recQ.warranty_months} months warranty</b>, <b>${recQ.delivery_days} days lead-time</b>, and verified SLA (${recQ.after_sales_service}).
-        - **Market Benchmarking:** All line items cross-referenced against GeM Portal rate contracts and commercial wholesale averages.`
-      ).replace(/### (.*)/g, '<div class="font-bold text-white mb-1">$1</div>').replace(/- (.*)/g, '<div class="text-slate-300">• $1</div>');
-
-      // Quotations comparison table
-      const tbody = document.getElementById('quotation-comparison-tbody');
-      tbody.innerHTML = '';
+      // Table 1: Multi-Factor Comparison
+      const qTbody = document.getElementById('quotation-comparison-tbody');
+      qTbody.innerHTML = '';
       p.quotations.forEach(q => {
-        const isRec = q.id === p.recommended_quotation_id || (q.recommendation_badge && q.recommendation_badge.includes('Recommended'));
-        const rowBg = isRec ? 'bg-indigo-950/30 font-semibold' : 'hover:bg-slate-800/40';
-        tbody.innerHTML += `
+        const isRec = q.recommendation_tag === 'RECOMMENDED_BEST_VALUE';
+        const isL1 = q.recommendation_tag === 'LOWEST_COST_L1';
+        const rowBg = isRec ? 'bg-[#F58220]/10 border-l-4 border-l-[#F58220]' : 'hover:bg-[#031024]/60';
+        const tagBadge = isRec ? '<span class="px-2 py-0.5 bg-[#F58220]/20 text-[#F58220] rounded border border-[#F58220]/40 font-bold">🏆 Best Overall Value</span>' :
+                         (isL1 ? '<span class="px-2 py-0.5 bg-sky-500/10 text-sky-400 rounded border border-sky-500/20 font-bold">🏷️ Lowest Cost (L1)</span>' :
+                                 '<span class="px-2 py-0.5 bg-slate-800 text-slate-400 rounded">⚪ Compliant</span>');
+
+        qTbody.innerHTML += `
           <tr class="${rowBg}">
-            <td class="p-2.5 text-white">
-              <div class="font-medium">${q.vendor_name}</div>
-              <div class="text-[10px] text-slate-400">${q.is_existing_vendor ? '✔ Approved ERP Vendor' : 'New Supplier'}</div>
-            </td>
-            <td class="p-2.5 mono text-white font-bold">₹${Number(q.total_amount).toLocaleString('en-IN')}</td>
-            <td class="p-2.5 mono text-slate-300">${q.delivery_days} days</td>
-            <td class="p-2.5 mono text-slate-300">${q.warranty_months} mo</td>
-            <td class="p-2.5 text-slate-400 text-[11px]">${q.after_sales_service}</td>
-            <td class="p-2.5 mono font-bold text-indigo-400">${q.total_score}</td>
-            <td class="p-2.5">
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isRec ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 border border-slate-700'}">
-                ${q.recommendation_badge || 'Bidder'}
-              </span>
-            </td>
+            <td class="p-2.5 font-medium text-white">${q.vendor_name}</td>
+            <td class="p-2.5 mono font-semibold text-white">₹${Number(q.total_amount).toLocaleString('en-IN')}</td>
+            <td class="p-2.5 mono text-blue-200">${q.delivery_days} days</td>
+            <td class="p-2.5 mono text-blue-200">${q.warranty_months / 12} yrs</td>
+            <td class="p-2.5 text-blue-100 text-[11px]">${q.after_sales_service}</td>
+            <td class="p-2.5 mono font-bold text-emerald-400">${q.total_score}</td>
+            <td class="p-2.5">${tagBadge}</td>
           </tr>
         `;
       });
 
-      // Market benchmarks table
-      const mBody = document.getElementById('market-bench-tbody');
-      mBody.innerHTML = '';
-      const allItems = p.quotations.flatMap(q => q.items || []);
-      // Deduplicate items by name
-      const seen = new Set();
-      allItems.forEach(it => {
-        if (seen.has(it.item_name)) return;
-        seen.add(it.item_name);
-        const varSign = it.market_variance_pct > 0 ? '+' : '';
-        const varColor = it.market_variance_pct > 10 ? 'text-rose-400' : (it.market_variance_pct < -5 ? 'text-emerald-400' : 'text-slate-300');
-        mBody.innerHTML += `
-          <tr class="hover:bg-slate-800/40">
+      // Table 2: Online Market Benchmarking
+      const bTbody = document.getElementById('market-bench-tbody');
+      bTbody.innerHTML = '';
+      (p.market_comparisons || []).forEach(it => {
+        const hasVar = it.variance_pct > 0;
+        const varSign = it.variance_pct > 0 ? '+' : '';
+        const varColor = it.variance_pct > 5.0 ? 'text-rose-400' : (it.variance_pct < -5.0 ? 'text-emerald-400' : 'text-blue-300');
+        bTbody.innerHTML += `
+          <tr class="hover:bg-[#031024]/60">
             <td class="p-2.5 font-medium text-white">${it.item_name}</td>
-            <td class="p-2.5 mono text-white">₹${Number(it.unit_price).toLocaleString('en-IN')}</td>
-            <td class="p-2.5 mono text-sky-400 font-semibold">₹${Number(it.market_benchmark_price).toLocaleString('en-IN')}</td>
-            <td class="p-2.5 mono text-slate-400">₹${Number(it.market_benchmark_price*0.9).toFixed(0)} - ₹${Number(it.market_benchmark_price*1.1).toFixed(0)}</td>
-            <td class="p-2.5 mono font-bold ${varColor}">${varSign}${it.market_variance_pct}%</td>
-            <td class="p-2.5 text-slate-400 text-[11px]">GeM Portal & Amazon B2B</td>
+            <td class="p-2.5 mono text-white">₹${Number(it.quoted_price || it.unit_price || 0).toLocaleString('en-IN')}</td>
+            <td class="p-2.5 mono text-sky-400 font-semibold">₹${Number(it.benchmark_price).toLocaleString('en-IN')}</td>
+            <td class="p-2.5 mono text-blue-300/80">₹${Number(it.min_market_price || it.benchmark_price*0.9).toFixed(0)} - ₹${Number(it.max_market_price || it.benchmark_price*1.1).toFixed(0)}</td>
+            <td class="p-2.5 mono font-bold ${varColor}">${varSign}${it.variance_pct}%</td>
+            <td class="p-2.5 text-blue-200 text-[11px]">${it.source || 'GeM Portal & Amazon B2B'}</td>
           </tr>
         `;
       });
 
-      // 4-Step Approval Stepper
+      // 4-Step Approval Stepper (With Real JKLU Officers)
       const stepper = document.getElementById('prop-approval-stepper');
       stepper.innerHTML = '';
       const roles = ['HOD', 'PURCHASE_OFFICER', 'ACCOUNTS', 'CFO'];
       const roleTitles = {
         HOD: '1. HoD Initiation',
         PURCHASE_OFFICER: '2. Purchase Scrutiny',
-        ACCOUNTS: '3. Accounts Budget',
+        ACCOUNTS: '3. Accounts Clearance',
         CFO: '4. CFO Final Sanction'
+      };
+      const roleOfficers = {
+        HOD: 'Respective Dean / HoD',
+        PURCHASE_OFFICER: 'Mr. Sonjay Dahiya (DGM Admin)',
+        ACCOUNTS: 'CA. Arvind Kumar (DGM Finance)',
+        CFO: 'CA K.K. Maheshwari (CFO & Registrar)'
       };
 
       let pendingRole = null;
@@ -874,14 +927,15 @@ Payment Terms: 100% on delivery`
         const isPending = step && step.status === 'PENDING';
         if (isPending && !pendingRole) pendingRole = r;
 
-        const bg = isDone ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : (isPending ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 pulse-amber font-bold' : 'bg-slate-950 text-slate-500 border-slate-800');
-        const icon = isDone ? 'fa-circle-check text-emerald-400' : (isPending ? 'fa-spinner text-amber-400' : 'fa-clock text-slate-600');
+        const bg = isDone ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : (isPending ? 'bg-[#F58220]/20 text-[#F58220] border-[#F58220]/50 pulse-orange font-bold' : 'bg-[#031024] text-blue-400/40 border-[#183E7D]');
+        const icon = isDone ? 'fa-circle-check text-emerald-400' : (isPending ? 'fa-spinner fa-spin text-[#F58220]' : 'fa-clock text-blue-300/40');
 
         stepper.innerHTML += `
           <div class="p-2.5 rounded-lg border ${bg} flex flex-col items-center">
             <i class="fa-solid ${icon} mb-1"></i>
-            <span class="font-semibold text-[11px]">${roleTitles[r]}</span>
-            <span class="text-[9px] uppercase tracking-wider mt-0.5">${step ? step.status : 'PENDING'}</span>
+            <span class="font-semibold text-[11px] text-white">${roleTitles[r]}</span>
+            <span class="text-[9px] text-blue-200/80 mt-0.5">${roleOfficers[r]}</span>
+            <span class="text-[9px] uppercase tracking-wider mt-1 px-1.5 py-0.2 rounded font-mono ${isDone ? 'bg-emerald-500/30' : (isPending ? 'bg-[#F58220]/30 text-white' : 'bg-[#031024]')}">${step ? step.status : 'PENDING'}</span>
           </div>
         `;
       });
@@ -892,15 +946,15 @@ Payment Terms: 100% on delivery`
         actionBox.innerHTML = `
           <div class="w-full flex items-center justify-between text-emerald-400 font-bold">
             <div class="flex items-center space-x-2">
-              <i class="fa-solid fa-stamp text-lg"></i>
+              <i class="fa-solid fa-stamp text-lg text-[#F58220]"></i>
               <span>CFO Final Sanction Granted! University Purchase Order Issued: <span class="text-white mono">${p.po_number}</span></span>
             </div>
-            <button onclick="switchWorkflowMode('invoices')" class="px-3 py-1.5 bg-indigo-600 text-white rounded text-xs">Go to Invoicing</button>
+            <button onclick="switchWorkflowMode('invoices')" class="px-3.5 py-1.5 bg-[#0136A1] hover:bg-[#00226B] text-white rounded text-xs font-semibold">Proceed to 3-Way Matching</button>
           </div>
         `;
       } else if (pendingRole) {
-        document.getElementById('action-role-title').textContent = `Action Required from: ${roleTitles[pendingRole]}`;
-        document.getElementById('action-role-desc').textContent = `Authorize proposal to forward to the next institutional governance gate.`;
+        document.getElementById('action-role-title').textContent = `Sign-off Required: ${roleTitles[pendingRole]} (${roleOfficers[pendingRole]})`;
+        document.getElementById('action-role-desc').textContent = `Verify multi-criteria scrutiny matrix, fair market check, and authorize proposal to forward.`;
         actionBox.classList.remove('hidden');
       }
     }
@@ -944,7 +998,7 @@ Payment Terms: 100% on delivery`
         <div>• <b>Benchmark Price:</b> ₹${Number(data.benchmark_price).toLocaleString('en-IN')}</div>
         <div>• <b>Range:</b> ₹${Number(data.min_market_price).toLocaleString('en-IN')} - ₹${Number(data.max_market_price).toLocaleString('en-IN')}</div>
         <div>• <b>Source:</b> ${data.source}</div>
-        <div class="text-[11px] text-slate-400 mt-1">${data.benchmark_specs}</div>
+        <div class="text-[11px] text-blue-300 mt-1">${data.benchmark_specs}</div>
       `;
     }
 
@@ -974,7 +1028,12 @@ Payment Terms: 100% on delivery`
       const roles = ['maker', 'procurement', 'accounts', 'department'];
       roles.forEach(r => {
         const btn = document.getElementById('tab-' + r);
-        btn.className = (r === role) ? 'px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-indigo-600 text-white shadow-sm shadow-indigo-500/30' : 'px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700';
+        if (r === role) {
+          btn.className = (r === 'maker') ? 'px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-[#0136A1] text-white shadow-sm shadow-blue-900/40 border border-[#0136A1]' :
+                          'px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-[#F58220] text-white shadow-sm shadow-orange-500/30 border border-[#F58220]';
+        } else {
+          btn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition bg-[#031024] text-blue-200 hover:text-white hover:bg-[#0D2E68] border border-[#183E7D]';
+        }
       });
       renderActiveView();
     }
@@ -1007,7 +1066,7 @@ Payment Terms: 100% on delivery`
       }
 
       const logBox = document.getElementById('agent-logs');
-      logBox.innerHTML = '<div class="text-indigo-400 font-semibold mb-2">🚀 Starting Autonomous AP Agent Maker...</div>';
+      logBox.innerHTML = '<div class="text-[#F58220] font-semibold mb-2">🚀 Starting Autonomous AP Agent Maker...</div>';
 
       const formData = new FormData();
       if (text) formData.append('text', text);
@@ -1046,7 +1105,7 @@ Payment Terms: 100% on delivery`
         badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold uppercase border bg-sky-500/10 text-sky-400 border-sky-500/30';
       }
 
-      document.getElementById('maker-verdict-box').innerHTML = (inv.maker_summary || 'No summary compiled.').replace(/### (.*)/g, '<div class="font-bold text-white mb-1">$1</div>').replace(/- \*\*(.*?)\*\*/g, '<div class="text-slate-300">• <b>$1</b>');
+      document.getElementById('maker-verdict-box').innerHTML = (inv.maker_summary || 'No summary compiled.').replace(/### (.*)/g, '<div class="font-bold text-white mb-1">$1</div>').replace(/- \*\*(.*?)\*\*/g, '<div class="text-blue-100">• <b>$1</b>');
 
       const stepper = document.getElementById('doa-stepper');
       stepper.innerHTML = '';
@@ -1054,14 +1113,14 @@ Payment Terms: 100% on delivery`
         inv.approvals.forEach((appr, idx) => {
           const isDone = appr.status === 'APPROVED';
           const isPending = appr.status === 'PENDING';
-          const color = isDone ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' : (isPending ? 'bg-amber-500/20 text-amber-400 border-amber-500/40 pulse-amber' : 'bg-slate-800 text-slate-500 border-slate-700');
+          const color = isDone ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' : (isPending ? 'bg-[#F58220]/20 text-[#F58220] border-[#F58220]/50 pulse-orange' : 'bg-[#031024] text-blue-300/40 border-[#183E7D]');
           const icon = isDone ? 'fa-check' : 'fa-user-tie';
           stepper.innerHTML += `
             <div class="flex items-center space-x-1.5 px-2.5 py-1 rounded text-xs border ${color}">
               <i class="fa-solid ${icon}"></i>
               <span class="font-medium">${appr.role}</span>
             </div>
-            ${idx < inv.approvals.length - 1 ? '<i class="fa-solid fa-arrow-right text-slate-600 text-xs"></i>' : ''}
+            ${idx < inv.approvals.length - 1 ? '<i class="fa-solid fa-arrow-right text-blue-400/40 text-xs"></i>' : ''}
           `;
         });
       }
@@ -1083,14 +1142,14 @@ Payment Terms: 100% on delivery`
       tbody.innerHTML = '';
       v.lines_comparison.forEach(row => {
         const hasVar = row.variance_pct > 2.0;
-        const varColor = hasVar ? 'text-amber-400 font-bold' : 'text-slate-400';
+        const varColor = hasVar ? 'text-amber-400 font-bold' : 'text-blue-200';
         tbody.innerHTML += `
-          <tr class="hover:bg-slate-800/40">
+          <tr class="hover:bg-[#031024]/60">
             <td class="p-2.5 font-medium text-white mono">${row.item_code}</td>
-            <td class="p-2.5 text-slate-300 mono">${row.ordered_qty}</td>
-            <td class="p-2.5 text-slate-300 mono">${row.received_qty}</td>
+            <td class="p-2.5 text-blue-200 mono">${row.ordered_qty}</td>
+            <td class="p-2.5 text-blue-200 mono">${row.received_qty}</td>
             <td class="p-2.5 font-semibold text-sky-400 mono">${row.billed_qty}</td>
-            <td class="p-2.5 text-slate-400 mono">₹${Number(row.po_price).toFixed(2)}</td>
+            <td class="p-2.5 text-blue-300 mono">₹${Number(row.po_price).toFixed(2)}</td>
             <td class="p-2.5 text-white mono">₹${Number(row.billed_price).toFixed(2)}</td>
             <td class="p-2.5 mono ${varColor}">${row.variance_pct > 0 ? '+' : ''}${row.variance_pct}%</td>
           </tr>
@@ -1117,9 +1176,9 @@ Payment Terms: 100% on delivery`
       ledgerBox.innerHTML = '';
       v.draft_ledger_entry.forEach(e => {
         ledgerBox.innerHTML += `
-          <div class="flex justify-between items-center py-0.5 border-b border-slate-900">
-            <span class="${e.side === 'DR' ? 'text-indigo-400' : 'text-emerald-400'} font-semibold">${e.side}</span>
-            <span class="text-slate-300">${e.account}</span>
+          <div class="flex justify-between items-center py-0.5 border-b border-[#031024]">
+            <span class="${e.side === 'DR' ? 'text-[#F58220]' : 'text-emerald-400'} font-semibold">${e.side}</span>
+            <span class="text-blue-100">${e.account}</span>
             <span class="text-white font-medium">₹${Number(e.amount).toLocaleString('en-IN', {minimumFractionDigits: 2})}</span>
           </div>
         `;

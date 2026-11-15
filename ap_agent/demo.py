@@ -124,12 +124,12 @@ Payment Terms: 30 Days Net
     print(f"\n  • Proposal saved in ERP Database with ID: {prop_id} [Status: PENDING_HOD]")
 
     # Simulate Institutional 4-Tier Approval Flow
-    print("\n  [Simulating 4-Tier Human Approval Gate]")
+    print("\n  [Simulating 4-Tier Human Approval Gate (JK Lakshmipat University - JKLU)]")
     approvals_to_run = [
-        ("HOD", "Prof. K. Sharma (HoD IET)", "Approved. Essential for upcoming semester AI curriculum."),
-        ("PURCHASE_OFFICER", "Mr. V. Patel (Purchase)", "Scrutiny verified. Recommending Dell for 3-yr onsite warranty despite MicroTech L1."),
-        ("ACCOUNTS", "Ms. S. Iyer (Accounts)", "Budget verified. IET Equipment Capex has sufficient balance."),
-        ("CFO", "Dr. R. Gupta (CFO)", "Sanctioned. Issue official Purchase Order to Dell Enterprise.")
+        ("HOD", "Dr. Tapas Kumar (Dean, IET - JKLU)", "Approved. Essential for upcoming semester AI & Robotics laboratory."),
+        ("PURCHASE_OFFICER", "Mr. Sonjay Dahiya (DGM Administration & Purchase)", "Scrutiny verified. Recommending Dell Enterprise for 3-yr onsite OEM warranty despite MicroTech lower initial quote."),
+        ("ACCOUNTS", "CA. Arvind Kumar (DGM Finance & Accounts)", "Budget verified. IET Equipment Capex allocation has sufficient uncommitted funds."),
+        ("CFO", "CA K.K. Maheshwari (CFO & Registrar, JKLU)", "Sanctioned. Issue official Purchase Order to Dell India Enterprise Solutions.")
     ]
 
     for role, user, remarks in approvals_to_run:

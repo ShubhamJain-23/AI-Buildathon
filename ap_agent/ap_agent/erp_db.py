@@ -516,19 +516,19 @@ def get_ledger_balance():
     return summary
 
 UNIVERSITY_DEPARTMENTS_META = [
-    {"code": "IET", "name": "Institute of Engineering and Technology", "hod": "Prof. R. K. Sharma (Dean, Engineering)"},
-    {"code": "IM", "name": "Institute of Management", "hod": "Dr. Ananya Sen (Dean, Management)"},
-    {"code": "ID", "name": "Institute of Design", "hod": "Prof. Vikram Malhotra (Head, Design)"},
-    {"code": "ADMIN", "name": "Administration", "hod": "Col. S. K. Nair (Registrar / Admin Head)"},
-    {"code": "HOSTEL", "name": "Hostels", "hod": "Dr. P. Verma (Chief Warden)"},
-    {"code": "MDC", "name": "Management Development Centre (MDC)", "hod": "Dr. Neha Gupta (Director, MDC)"},
-    {"code": "SEC", "name": "Security", "hod": "Capt. Rajeev Joshi (Chief Security Officer)"},
-    {"code": "MKT", "name": "Marketing", "hod": "Ms. Priya Kapoor (Director, Brand & Marketing)"},
-    {"code": "ADM", "name": "Admissions and Outreach", "hod": "Mr. Amit Mehta (Head, Admissions)"},
-    {"code": "HR", "name": "Human Resources (HR)", "hod": "Mrs. Shalini Roy (Head, HR)"},
-    {"code": "ACC", "name": "Accounts", "hod": "Mr. C. P. Agarwal (Finance Officer)"},
-    {"code": "CHEM", "name": "Department of Chemistry", "hod": "Dr. V. K. Iyer (Head, Chemistry)"},
-    {"code": "IT", "name": "Department of Information Technology", "hod": "Prof. S. R. Bhatia (Head, IT)"},
+    {"code": "IET", "name": "Institute of Engineering and Technology (IET)", "hod": "Dr. Tapas Kumar (Dean, IET) & Dr. Umesh Gupta (Dean Academic Affairs)"},
+    {"code": "IM", "name": "Institute of Management (IM)", "hod": "Dr. Sheetal Mundra (Acting Head, Institute of Management)"},
+    {"code": "ID", "name": "Institute of Design (ID)", "hod": "Prof. Rattan Gangadhar (Dean, Institute of Design)"},
+    {"code": "ADMIN", "name": "Administration", "hod": "Mr. Sonjay Dahiya (DGM, Administration) / CA K.K. Maheshwari (Registrar)"},
+    {"code": "HOSTEL", "name": "Hostels & Student Housing", "hod": "Dr. Devika Kataria (Chief Warden, Hostels)"},
+    {"code": "MDC", "name": "Management Development Centre (MDC)", "hod": "Dr. Sheetal Mundra (Chairperson, MDC & Executive Education)"},
+    {"code": "SEC", "name": "Security & Vigilance", "hod": "Mr. Varun Rathi (Senior Security Officer & Member Secretary)"},
+    {"code": "MKT", "name": "Marketing & Brand Outreach", "hod": "Mr. Aseem Bhatnagar (Head, Brand & Marketing Outreach)"},
+    {"code": "ADM", "name": "Admissions and Outreach", "hod": "Mr. Aseem Bhatnagar (Head, Admissions and Outreach)"},
+    {"code": "HR", "name": "Human Resources (HR)", "hod": "Mr. Prem Singh (President Group HR & Panel Member)"},
+    {"code": "ACC", "name": "Finance & Accounts Division", "hod": "CA. Arvind Kumar (DGM, Finance & Accounts) / CA K.K. Maheshwari (CFO)"},
+    {"code": "CHEM", "name": "Department of Chemistry & Sciences", "hod": "Dr. Devika Kataria (Associate Professor & Head, Sciences)"},
+    {"code": "IT", "name": "Information Technology Infrastructure", "hod": "Dr. Umesh Gupta (Dean Academic Affairs & IT Infrastructure)"},
 ]
 
 def get_all_departments():

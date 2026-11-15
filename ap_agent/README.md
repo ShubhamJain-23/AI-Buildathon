@@ -1,7 +1,9 @@
 # 🏛️ APEX-AP: Autonomous Accounts Payable & Vendor Procurement Agent
-### Problem Statement PS-09 | Intelligent University AP & Procurement Automation Engine
+### Problem Statement PS-09 | JK Lakshmipat University (JKLU), Jaipur
 
 > **APEX-AP** is an enterprise-grade AI Agent designed as an **autonomous top layer** over existing University ERP systems. Built on the **Maker-Checker paradigm**, it acts as the **Maker**—automating quotation scrutiny, market price benchmarking, 3-way matching, duplicate detection, and accounting entries—while empowering human institutional officers as **Checkers** with role-specific views and multi-tier approval gates.
+> 
+> Styled strictly in **JK Lakshmipat University (JKLU)** brand identity (**Royal Blue `#0136A1`** and **Signature Orange `#F58220`**) with academic leadership and HoD rosters sourced from [jklu.edu.in](https://jklu.edu.in).
 
 ---
 
@@ -28,20 +30,21 @@
    - **Accounts Division View**: Tax breakdown (CGST/SGST/IGST), MSME due date, discount captures, draft journal entries.
    - **Respective Department View**: Departmental budget utilization (allocated vs committed vs remaining balance).
 
-4. **University Governance Across 12 Departments**:
-   - Pre-configured with all 12 university departments:
-     1. Institute of Engineering and Technology (`IET`)
-     2. Institute of Management (`IM`)
-     3. Institute of Design (`ID`)
-     4. Administration (`ADMIN`)
-     5. Hostels (`HOSTEL`)
-     6. MDC (`MDC`)
-     7. Security (`SEC`)
-     8. Marketing (`MKT`)
-     9. Admissions and Outreach (`ADM`)
-     10. HR (`HR`)
-     11. Hostels - Facilities (`HOSTEL_FAC`)
-     12. Accounts (`ACC`)
+4. **JK Lakshmipat University Department & HoD Roster (jklu.edu.in)**:
+   - Pre-configured with official JKLU leadership:
+     1. **Institute of Engineering and Technology (`IET`)**: Dr. Tapas Kumar *(Dean, IET)* & Dr. Umesh Gupta *(Dean Academic Affairs)*
+     2. **Institute of Management (`IM`)**: Dr. Sheetal Mundra *(Acting Head, Institute of Management)*
+     3. **Institute of Design (`ID`)**: Prof. Rattan Gangadhar *(Dean, Institute of Design)*
+     4. **Administration (`ADMIN`)**: Mr. Sonjay Dahiya *(DGM, Administration)* & CA K.K. Maheshwari *(Registrar)*
+     5. **Hostels & Residential Life (`HOSTEL`)**: Dr. Devika Kataria *(Chief Warden, Hostels)*
+     6. **Management Development Centre (`MDC`)**: Dr. Sheetal Mundra *(Chairperson, MDC & Executive Education)*
+     7. **Security & Vigilance (`SEC`)**: Mr. Varun Rathi *(Senior Security Officer & Member Secretary)*
+     8. **Marketing & Outreach (`MKT`)**: Mr. Aseem Bhatnagar *(Head, Brand & Marketing Outreach)*
+     9. **Admissions and Outreach (`ADM`)**: Mr. Aseem Bhatnagar *(Head, Admissions and Outreach)*
+     10. **Human Resources (`HR`)**: Mr. Prem Singh *(President Group HR & Panel Member)*
+     11. **Finance & Accounts (`ACC`)**: CA. Arvind Kumar *(DGM, Finance & Accounts)* & CA K.K. Maheshwari *(CFO)*
+     12. **Department of Chemistry & Sciences (`CHEM`)**: Dr. Devika Kataria *(Associate Professor & Head, Sciences)*
+     13. **IT Infrastructure (`IT`)**: Dr. Umesh Gupta *(Dean Academic Affairs & IT Infrastructure)*
 
 ---
 
@@ -140,11 +143,11 @@ pip install fastapi uvicorn pytest httpx python-multipart
 ```powershell
 # Start the APEX-AP API & UI server
 $env:PYTHONPATH="ap_agent"
-python -m uvicorn ap_agent.api:app --host 127.0.0.1 --port 8000
+python -m uvicorn ap_agent.api:app --host 127.0.0.1 --port 8080
 ```
 Open your browser to:
-- **Interactive Dashboard**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
-- **Interactive Swagger API Docs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **Interactive Dashboard**: [http://127.0.0.1:8080](http://127.0.0.1:8080)
+- **Interactive Swagger API Docs**: [http://127.0.0.1:8080/docs](http://127.0.0.1:8080/docs)
 
 ### 4. Run Automated Tests
 ```powershell
