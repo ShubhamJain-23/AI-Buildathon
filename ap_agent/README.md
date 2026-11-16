@@ -35,16 +35,14 @@
      1. **Institute of Engineering and Technology (`IET`)**: Dr. Tapas Kumar *(Dean, IET)* & Dr. Umesh Gupta *(Dean Academic Affairs)*
      2. **Institute of Management (`IM`)**: Dr. Sheetal Mundra *(Acting Head, Institute of Management)*
      3. **Institute of Design (`ID`)**: Prof. Rattan Gangadhar *(Dean, Institute of Design)*
-     4. **Administration (`ADMIN`)**: Mr. Sonjay Dahiya *(DGM, Administration)* & CA K.K. Maheshwari *(Registrar)*
-     5. **Hostels & Residential Life (`HOSTEL`)**: Dr. Devika Kataria *(Chief Warden, Hostels)*
-     6. **Management Development Centre (`MDC`)**: Dr. Sheetal Mundra *(Chairperson, MDC & Executive Education)*
-     7. **Security & Vigilance (`SEC`)**: Mr. Varun Rathi *(Senior Security Officer & Member Secretary)*
-     8. **Marketing & Outreach (`MKT`)**: Mr. Aseem Bhatnagar *(Head, Brand & Marketing Outreach)*
-     9. **Admissions and Outreach (`ADM`)**: Mr. Aseem Bhatnagar *(Head, Admissions and Outreach)*
-     10. **Human Resources (`HR`)**: Mr. Prem Singh *(President Group HR & Panel Member)*
-     11. **Finance & Accounts (`ACC`)**: CA. Arvind Kumar *(DGM, Finance & Accounts)* & CA K.K. Maheshwari *(CFO)*
-     12. **Department of Chemistry & Sciences (`CHEM`)**: Dr. Devika Kataria *(Associate Professor & Head, Sciences)*
-     13. **IT Infrastructure (`IT`)**: Dr. Umesh Gupta *(Dean Academic Affairs & IT Infrastructure)*
+     4. **Administration (`ADMIN`)**: Mr. Sonjay Dahiya *(DGM, Administration)* / CA K.K. Maheshwari *(Registrar)*
+     5. **Hostels & Student Housing (`HOSTEL`)**: Dr. Devika Kataria *(Chief Warden, Hostels)*
+     6. **Security & Vigilance (`SEC`)**: Mr. Varun Rathi *(Senior Security Officer & Member Secretary)*
+     7. **Marketing & Brand Outreach (`MKT`)**: Mr. Somesh Bang *(Head, Brand & Marketing Outreach)*
+     8. **Admissions and Outreach (`ADM`)**: Mr. Aseem Bhatnagar *(Head, Admissions and Outreach)*
+     9. **Human Resources (`HR`)**: Ms. Rashmi Chaudhary *(Head HR)*
+     10. **Finance & Accounts Division (`ACC`)**: CA. Arvind Kumar *(DGM, Finance & Accounts)* / CA K.K. Maheshwari *(CFO)*
+     11. **Information Technology Infrastructure (`IT`)**: Mr. Vikrant Sharma
 
 ---
 
@@ -178,7 +176,7 @@ This script executes:
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `GET` | `/` | Serves responsive Tailwind Maker-Checker Dashboard. |
-| `GET` | `/departments` | Returns list of all 12 university departments and budgets. |
+| `GET` | `/departments` | Returns list of all 11 university departments and budgets. |
 | `GET` | `/market/search` | Benchmarks an item against GeM, Amazon Business, and IndiaMART. |
 | `POST` | `/proposals/scrutinize` | Ingests 2-3+ quotations, runs MCDA scoring, and drafts comparative statement. |
 | `GET` | `/proposals` | Lists all active procurement proposals and approval stages. |

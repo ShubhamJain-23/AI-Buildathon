@@ -171,6 +171,9 @@ class DirectClient:
         elif url == "/":
             r = api_mod.serve_dashboard()
             return MockResp(200, r)
+        elif url in ("/documentation", "/docs-view"):
+            r = api_mod.serve_docs_view()
+            return MockResp(200, r)
         raise ValueError(f"Unknown GET url {url}")
 
 def test_api_end_to_end():
@@ -189,3 +192,5 @@ def test_api_end_to_end():
     assert sched and sched[0]["notes"] and "discount" in sched[0]["notes"].lower()
     assert c.get("/liabilities").json()["ap_balance"] == "31860.00"
     assert c.get("/").status_code == 200
+    assert c.get("/documentation").status_code == 200
+    assert c.get("/docs-view").status_code == 200

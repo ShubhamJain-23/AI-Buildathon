@@ -125,3 +125,60 @@ def test_full_institutional_approval_chain_and_po_generation():
     iet = depts["IET"]
     # Original committed was 8,00,000 + 8,96,800 = 16,96,800
     assert iet["committed"] == 1696800.0
+
+def test_document_loader_multi_format():
+    """Validates multi-format ingestion: Markdown, DOCX, XLSX, PPTX, and text."""
+    import io
+    import zipfile
+    from ap_agent.document_loader import extract_text_from_bytes
+
+    # 1. Markdown / Plain Text
+    md_content = b"# Quotation\nVendor: Alpha Tech\nTotal: 45,000.00\nDelivery: 7 days"
+    assert "Alpha Tech" in extract_text_from_bytes("quote.md", md_content)
+
+    # 2. DOCX (Word Document) in-memory zip
+    docx_buf = io.BytesIO()
+    with zipfile.ZipFile(docx_buf, "w") as z:
+        z.writestr("word/document.xml", """<?xml version="1.0" encoding="UTF-8"?>
+        <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+          <w:body>
+            <w:p><w:r><w:t>Vendor: Beta Systems LLP</w:t></w:r></w:p>
+            <w:p><w:r><w:t>Total: 78,000.00</w:t></w:r></w:p>
+            <w:p><w:r><w:t>Warranty: 3 years</w:t></w:r></w:p>
+          </w:body>
+        </w:document>""")
+    docx_text = extract_text_from_bytes("vendor_bid.docx", docx_buf.getvalue())
+    assert "Beta Systems LLP" in docx_text
+    assert "78,000.00" in docx_text
+
+    # 3. PPTX (PowerPoint Presentation) in-memory zip
+    pptx_buf = io.BytesIO()
+    with zipfile.ZipFile(pptx_buf, "w") as z:
+        z.writestr("ppt/slides/slide1.xml", """<?xml version="1.0" encoding="UTF-8"?>
+        <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+          <p:cSld><p:spTree><p:sp><p:txBody>
+            <a:p><a:r><a:t>Vendor: Gamma Displays Pvt Ltd</a:t></a:r></a:p>
+            <a:p><a:r><a:t>Item: Interactive Panel, Total: 150000.00</a:t></a:r></a:p>
+          </p:txBody></p:sp></p:spTree></p:cSld>
+        </p:sld>""")
+    pptx_text = extract_text_from_bytes("presentation_bid.pptx", pptx_buf.getvalue())
+    assert "Gamma Displays Pvt Ltd" in pptx_text
+
+    # 4. XLSX (Excel Spreadsheet) in-memory zip
+    xlsx_buf = io.BytesIO()
+    with zipfile.ZipFile(xlsx_buf, "w") as z:
+        z.writestr("xl/sharedStrings.xml", """<?xml version="1.0" encoding="UTF-8"?>
+        <sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="3" uniqueCount="3">
+          <si><t>Delta Commercial Hardware</t></si>
+          <si><t>Server AMC</t></si>
+          <si><t>350000.00</t></si>
+        </sst>""")
+        z.writestr("xl/worksheets/sheet1.xml", """<?xml version="1.0" encoding="UTF-8"?>
+        <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+          <sheetData>
+            <row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c></row>
+          </sheetData>
+        </worksheet>""")
+    xlsx_text = extract_text_from_bytes("quotation_sheet.xlsx", xlsx_buf.getvalue())
+    assert "Delta Commercial Hardware" in xlsx_text
+

@@ -521,14 +521,12 @@ UNIVERSITY_DEPARTMENTS_META = [
     {"code": "ID", "name": "Institute of Design (ID)", "hod": "Prof. Rattan Gangadhar (Dean, Institute of Design)"},
     {"code": "ADMIN", "name": "Administration", "hod": "Mr. Sonjay Dahiya (DGM, Administration) / CA K.K. Maheshwari (Registrar)"},
     {"code": "HOSTEL", "name": "Hostels & Student Housing", "hod": "Dr. Devika Kataria (Chief Warden, Hostels)"},
-    {"code": "MDC", "name": "Management Development Centre (MDC)", "hod": "Dr. Sheetal Mundra (Chairperson, MDC & Executive Education)"},
     {"code": "SEC", "name": "Security & Vigilance", "hod": "Mr. Varun Rathi (Senior Security Officer & Member Secretary)"},
-    {"code": "MKT", "name": "Marketing & Brand Outreach", "hod": "Mr. Aseem Bhatnagar (Head, Brand & Marketing Outreach)"},
+    {"code": "MKT", "name": "Marketing & Brand Outreach", "hod": "Mr. Somesh Bang (Head, Brand & Marketing Outreach)"},
     {"code": "ADM", "name": "Admissions and Outreach", "hod": "Mr. Aseem Bhatnagar (Head, Admissions and Outreach)"},
-    {"code": "HR", "name": "Human Resources (HR)", "hod": "Mr. Prem Singh (President Group HR & Panel Member)"},
+    {"code": "HR", "name": "Human Resources (HR)", "hod": "Ms. Rashmi Chaudhary (Head HR)"},
     {"code": "ACC", "name": "Finance & Accounts Division", "hod": "CA. Arvind Kumar (DGM, Finance & Accounts) / CA K.K. Maheshwari (CFO)"},
-    {"code": "CHEM", "name": "Department of Chemistry & Sciences", "hod": "Dr. Devika Kataria (Associate Professor & Head, Sciences)"},
-    {"code": "IT", "name": "Information Technology Infrastructure", "hod": "Dr. Umesh Gupta (Dean Academic Affairs & IT Infrastructure)"},
+    {"code": "IT", "name": "Information Technology Infrastructure", "hod": "Mr. Vikrant Sharma"},
 ]
 
 def get_all_departments():
@@ -644,7 +642,12 @@ def get_proposals_list():
 def get_proposal_full(proposal_id: str):
     conn = get_connection()
     c = conn.cursor()
-    c.execute("SELECT * FROM procurement_proposals WHERE id = ?", (proposal_id,))
+    c.execute("""
+    SELECT p.*, q.vendor_name as recommended_vendor, q.total_amount as recommended_amount
+    FROM procurement_proposals p
+    LEFT JOIN quotations q ON p.recommended_quotation_id = q.id
+    WHERE p.id = ?
+    """, (proposal_id,))
     p = c.fetchone()
     if not p:
         conn.close()
@@ -653,10 +656,21 @@ def get_proposal_full(proposal_id: str):
 
     c.execute("SELECT * FROM quotations WHERE proposal_id = ? ORDER BY total_score DESC", (proposal_id,))
     quotes = [dict(r) for r in c.fetchall()]
+    market_comparisons = []
     for q in quotes:
         c.execute("SELECT * FROM quotation_items WHERE quotation_id = ?", (q["id"],))
-        q["items"] = [dict(r) for r in c.fetchall()]
+        items = [dict(r) for r in c.fetchall()]
+        q["items"] = items
+        for it in items:
+            market_comparisons.append({
+                "item_name": it["item_name"],
+                "unit_price": it["unit_price"],
+                "benchmark_price": it["market_benchmark_price"],
+                "variance_pct": it["market_variance_pct"],
+                "source": "GeM Portal & Amazon B2B"
+            })
     p_dict["quotations"] = quotes
+    p_dict["market_comparisons"] = market_comparisons
 
     c.execute("SELECT * FROM proposal_approvals WHERE proposal_id = ? ORDER BY seq ASC", (proposal_id,))
     p_dict["approvals"] = [dict(r) for r in c.fetchall()]

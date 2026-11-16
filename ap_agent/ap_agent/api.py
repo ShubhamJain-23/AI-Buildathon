@@ -20,6 +20,7 @@ from .erp_db import (
 )
 from .quotation_analyzer import analyze_proposals
 from .market_search import benchmark_item_price
+from .document_loader import extract_text_from_bytes
 from .gemini_agent import APAgentMaker
 from .erp_mcp_server import mcp_server
 from decimal import Decimal as D
@@ -86,7 +87,10 @@ def invoice_intake(
     if not inv_id:
         return final_packet
 
-    return get_invoice_details(inv_id)
+    res = get_invoice_details(inv_id)
+    if isinstance(final_packet, dict) and "observability_logs" in final_packet:
+        res["observability_logs"] = final_packet["observability_logs"]
+    return res
 
 @app.get("/invoices")
 def list_invoices(status: Optional[str] = None):
@@ -373,24 +377,54 @@ def search_market(query: str, price: Optional[float] = 0.0):
     return benchmark_item_price(query, price)
 
 @app.post("/proposals/scrutinize")
-def scrutinize_quotations(
+async def scrutinize_quotations(
     title: str = Form(...),
     department: str = Form(...),
-    quotations_json: str = Form(...)
+    files: Optional[List[UploadFile]] = File(None),
+    quotations_json: Optional[str] = Form(None)
 ):
-    """HoD uploads 2-3+ quotations; agent extracts, categorizes, benchmarks against online platforms, and generates comparative statement."""
-    try:
-        quotes_list = json.loads(quotations_json)
-    except Exception:
-        # Fallback split by delimiter if raw string
-        quotes_list = [q.strip() for q in quotations_json.split("---") if q.strip()]
+    """HoD uploads 2-3+ quotations across PDF, Image, Excel, Word (DOCX), PPTX, or Markdown.
+    Agent extracts terms, line items, performs multi-factor MCDA scoring (Quality vs L1),
+    and automatically queries live market prices across GeM Portal, Amazon Business, and IndiaMART."""
+    quotes_list = []
 
-    if not quotes_list:
-        raise HTTPException(400, "Please provide at least 2 vendor quotations for comparison.")
+    # 1. Process multi-format uploaded files (PDF, Image, Excel, DOCX, PPTX, Markdown)
+    if files:
+        for f in files:
+            if not f or not f.filename:
+                continue
+            data = await f.read()
+            if not data:
+                continue
+            text = extract_text_from_bytes(f.filename, data)
+            if text and text.strip():
+                quotes_list.append(text.strip())
+
+    # 2. Process quotations_json fallback (e.g. for Presets or programmatic testing)
+    if quotations_json and quotations_json.strip():
+        raw = quotations_json.strip()
+        try:
+            parsed = json.loads(raw)
+            if isinstance(parsed, list):
+                quotes_list.extend([str(q).strip() for q in parsed if str(q).strip()])
+            else:
+                quotes_list.append(str(parsed).strip())
+        except Exception:
+            quotes_list.extend([q.strip() for q in raw.split("---") if q.strip()])
+
+    if len(quotes_list) < 2:
+        raise HTTPException(
+            400,
+            f"University procurement rules (> ₹20,000) require at least 2 competitive vendor quotations. Received {len(quotes_list)} valid quotation(s)."
+        )
 
     analysis = analyze_proposals(title, department, quotes_list)
     prop_id = save_proposal(analysis)
-    return get_proposal_full(prop_id)
+    full_prop = get_proposal_full(prop_id)
+    full_prop["comparative_statement_markdown"] = analysis.get("comparative_statement_markdown")
+    if not full_prop.get("market_comparisons") and analysis.get("market_comparisons"):
+        full_prop["market_comparisons"] = analysis.get("market_comparisons")
+    return full_prop
 
 @app.get("/proposals")
 def list_proposals():
@@ -422,3 +456,10 @@ def decide_proposal(
 def serve_dashboard():
     with open(os.path.join(os.path.dirname(__file__), "dashboard.html"), "r", encoding="utf-8") as f:
         return f.read()
+
+@app.get("/documentation", response_class=HTMLResponse)
+@app.get("/docs-view", response_class=HTMLResponse)
+def serve_docs_view():
+    with open(os.path.join(os.path.dirname(__file__), "dashboard.html"), "r", encoding="utf-8") as f:
+        html = f.read()
+        return html.replace("let activeWorkflow = 'quotations';", "let activeWorkflow = 'docs';")
