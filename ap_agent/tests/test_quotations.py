@@ -182,3 +182,4 @@ def test_document_loader_multi_format():
     xlsx_text = extract_text_from_bytes("quotation_sheet.xlsx", xlsx_buf.getvalue())
     assert "Delta Commercial Hardware" in xlsx_text
 
+

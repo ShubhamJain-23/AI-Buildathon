@@ -167,7 +167,13 @@
                 <i class="fa-solid fa-paperclip text-[#0136A1]"></i>
                 <span>Attach Vendor Quotations (Min. 2-3 Files)</span>
               </label>
-              <span id="files-count-badge" class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200 font-medium">0 files attached</span>
+              <div class="flex items-center space-x-2">
+                <button type="button" onclick="loadSampleQuotations()" class="text-[10px] bg-blue-50 text-[#0136A1] hover:bg-blue-100 font-semibold px-2 py-0.5 rounded border border-blue-200 transition flex items-center space-x-1 cursor-pointer" title="Auto-populate sample bids for Dell, MicroTech, Lenovo">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                  <span>Load Sample Quotations</span>
+                </button>
+                <span id="files-count-badge" class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200 font-medium">0 files attached</span>
+              </div>
             </div>
 
             <!-- Drop Zone -->
@@ -1200,20 +1206,107 @@
       });
     }
 
+    // --- LOAD PRESET SAMPLE QUOTATIONS ---
+    function loadSampleQuotations() {
+      const qA = `TAX QUOTATION
+Vendor: Dell India Enterprise Solutions
+Item: Dell Latitude 5440 Core i5 16GB 512GB SSD
+Qty: 10
+Unit Price: 76,000.00
+Amount: 760,000.00
+Subtotal: 760,000.00
+GST 18%: 136,800.00
+Total: 896,800.00
+Delivery: 7 days
+Warranty: 3 years
+Service: 24x7 4-Hour Response Onsite Premier Support with OEM Certified Engineers
+Payment Terms: 30 Days Net`;
+
+      const qB = `TAX QUOTATION
+Vendor: MicroTech Systems & Peripherals
+Item: Dell Latitude 5440 Core i5 16GB 512GB SSD
+Qty: 10
+Unit Price: 73,500.00
+Amount: 735,000.00
+Subtotal: 735,000.00
+GST 18%: 132,300.00
+Total: 867,300.00
+Delivery: 28 days
+Warranty: 1 year
+Service: Standard Carry-in Warranty (No Onsite Support)
+Payment Terms: 100% Advance`;
+
+      const qC = `TAX QUOTATION
+Vendor: Lenovo Commercial Tech Pvt Ltd
+Item: ThinkPad E14 Core i5 16GB 512GB SSD
+Qty: 10
+Unit Price: 79,000.00
+Amount: 790,000.00
+Subtotal: 790,000.00
+GST 18%: 142,200.00
+Total: 932,200.00
+Delivery: 10 days
+Warranty: 3 years
+Service: 3-Year Premier Onsite Support
+Payment Terms: 30 Days Net`;
+
+      const fileA = new File([qA], "Dell_Quotation_Laptops.txt", { type: "text/plain" });
+      const fileB = new File([qB], "MicroTech_Vendor_Bid.txt", { type: "text/plain" });
+      const fileC = new File([qC], "Lenovo_Commercial_Proposal.txt", { type: "text/plain" });
+
+      selectedQuotationFiles = [fileA, fileB, fileC];
+      renderAttachedFilesList();
+
+      document.getElementById('prop-title').value = "10 High-Performance Workstation Laptops for AI Lab";
+      const deptEl = document.getElementById('prop-dept');
+      if (allDepartments && allDepartments.length > 0) {
+        deptEl.value = allDepartments[0].code;
+        updateDeptMeta();
+      }
+    }
+
     // --- PROPOSAL SUBMISSION & SCRUTINY ---
     async function handleProposalScrutiny(e) {
       if (e) e.preventDefault();
-      const title = document.getElementById('prop-title').value;
-      const dept = document.getElementById('prop-dept').value;
+      const titleInput = document.getElementById('prop-title');
+      const deptInput = document.getElementById('prop-dept');
+      const title = (titleInput.value || '').trim();
+      const dept = (deptInput.value || '').trim();
+
+      if (!title) {
+        alert("Please enter a Requisition Title / Procurement Goal (e.g. '10 High-Performance Workstation Laptops for AI Lab').");
+        titleInput.focus();
+        return;
+      }
+
+      if (!dept) {
+        alert("Please select a Department from the list.");
+        deptInput.focus();
+        return;
+      }
 
       if (!selectedQuotationFiles || selectedQuotationFiles.length < 2) {
-        alert("University Financial Policy requires at least 2 competitive vendor quotation files for scrutiny (Expenses > ₹20,000). Please attach 2 or more files.");
+        alert("University Financial Policy requires at least 2 competitive vendor quotation files for scrutiny (Expenses > ₹20,000). Please attach 2 or more files, or click 'Load Sample Quotations'.");
         return;
       }
 
       const fd = new FormData();
       fd.append('title', title);
       fd.append('department', dept);
+
+      // Pre-extract text from attached text files so both legacy & modern backend endpoints work seamlessly
+      const textList = [];
+      for (const f of selectedQuotationFiles) {
+        try {
+          if (typeof f.text === 'function') {
+            const content = await f.text();
+            if (content && content.trim()) {
+              textList.push(content.trim());
+            }
+          }
+        } catch (_) {}
+      }
+      fd.append('quotations_json', JSON.stringify(textList));
 
       selectedQuotationFiles.forEach(f => {
         fd.append('files', f, f.name);
@@ -1227,8 +1320,25 @@
       try {
         const res = await fetch('/proposals/scrutinize', { method: 'POST', body: fd });
         if (!res.ok) {
-          const errData = await res.json();
-          throw new Error(errData.detail || 'Failed to scrutinize quotations');
+          let errMsg = 'Failed to scrutinize quotations';
+          try {
+            const errData = await res.json();
+            if (typeof errData.detail === 'string') {
+              errMsg = errData.detail;
+            } else if (Array.isArray(errData.detail)) {
+              errMsg = errData.detail.map(d => {
+                const loc = d.loc ? d.loc.filter(x => x !== 'body').join('.') : '';
+                return (loc ? loc + ': ' : '') + (d.msg || JSON.stringify(d));
+              }).join('\n');
+            } else if (errData.detail && typeof errData.detail === 'object') {
+              errMsg = JSON.stringify(errData.detail);
+            } else if (errData.message) {
+              errMsg = errData.message;
+            }
+          } catch (_) {
+            errMsg = `Server error (${res.status}: ${res.statusText || 'Unknown'})`;
+          }
+          throw new Error(errMsg);
         }
         const data = await res.json();
         currentProposal = data;
@@ -1372,14 +1482,19 @@
 
       try {
         const res = await fetch(`/proposals/${currentProposal.id}/decision`, { method: 'POST', body: fd });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          const msg = typeof errData.detail === 'string' ? errData.detail : (errData.message || `Decision failed (${res.status})`);
+          throw new Error(msg);
+        }
         const data = await res.json();
-        alert(data.message);
+        alert(data.message || 'Decision recorded successfully');
         const pRef = await fetch(`/proposals/${currentProposal.id}`);
         currentProposal = await pRef.json();
         displayProposalDetails(currentProposal);
         loadOverviewStats();
       } catch (e) {
-        alert("Error: " + e.message);
+        alert("Decision Error: " + e.message);
       }
     }
 
@@ -1609,22 +1724,40 @@
       formData.append('approve', approve);
       formData.append('acted_by', 'Auditor');
 
-      const res = await fetch(`/invoices/${currentInvoice.id}/decision`, { method: 'POST', body: formData });
-      const data = await res.json();
-      alert(data.message);
-      const ref = await fetch(`/invoices/${currentInvoice.id}`);
-      currentInvoice = await ref.json();
-      displayInvoiceHeader(currentInvoice);
-      renderActiveView();
-      loadOverviewStats();
+      try {
+        const res = await fetch(`/invoices/${currentInvoice.id}/decision`, { method: 'POST', body: formData });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          const msg = typeof errData.detail === 'string' ? errData.detail : (errData.message || `Decision failed (${res.status})`);
+          throw new Error(msg);
+        }
+        const data = await res.json();
+        alert(data.message || 'Decision recorded successfully');
+        const ref = await fetch(`/invoices/${currentInvoice.id}`);
+        currentInvoice = await ref.json();
+        displayInvoiceHeader(currentInvoice);
+        renderActiveView();
+        loadOverviewStats();
+      } catch (e) {
+        alert("Decision Error: " + e.message);
+      }
     }
 
     async function executePaymentNow() {
       if (!currentInvoice) return;
-      const res = await fetch(`/payments/${currentInvoice.id}/execute`, { method: 'POST' });
-      const data = await res.json();
-      alert(data.message);
-      loadOverviewStats();
+      try {
+        const res = await fetch(`/payments/${currentInvoice.id}/execute`, { method: 'POST' });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          const msg = typeof errData.detail === 'string' ? errData.detail : (errData.message || `Payment execution failed (${res.status})`);
+          throw new Error(msg);
+        }
+        const data = await res.json();
+        alert(data.message || 'Payment executed successfully');
+        loadOverviewStats();
+      } catch (e) {
+        alert("Payment Error: " + e.message);
+      }
     }
 
     async function loadOverviewStats() {

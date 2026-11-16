@@ -378,14 +378,16 @@ def search_market(query: str, price: Optional[float] = 0.0):
 
 @app.post("/proposals/scrutinize")
 async def scrutinize_quotations(
-    title: str = Form(...),
-    department: str = Form(...),
+    title: str = Form("General Procurement Proposal"),
+    department: str = Form("IET"),
     files: Optional[List[UploadFile]] = File(None),
-    quotations_json: Optional[str] = Form(None)
+    quotations_json: str = Form("")
 ):
     """HoD uploads 2-3+ quotations across PDF, Image, Excel, Word (DOCX), PPTX, or Markdown.
     Agent extracts terms, line items, performs multi-factor MCDA scoring (Quality vs L1),
     and automatically queries live market prices across GeM Portal, Amazon Business, and IndiaMART."""
+    clean_title = (title or "").strip() or "General Procurement Proposal"
+    clean_dept = (department or "").strip() or "IET"
     quotes_list = []
 
     # 1. Process multi-format uploaded files (PDF, Image, Excel, DOCX, PPTX, Markdown)
@@ -400,25 +402,33 @@ async def scrutinize_quotations(
             if text and text.strip():
                 quotes_list.append(text.strip())
 
-    # 2. Process quotations_json fallback (e.g. for Presets or programmatic testing)
+    # 2. Process quotations_json fallback (e.g. for Presets, text uploads, or legacy client)
     if quotations_json and quotations_json.strip():
         raw = quotations_json.strip()
         try:
             parsed = json.loads(raw)
             if isinstance(parsed, list):
-                quotes_list.extend([str(q).strip() for q in parsed if str(q).strip()])
+                for q in parsed:
+                    q_str = str(q).strip()
+                    if q_str and q_str not in quotes_list:
+                        quotes_list.append(q_str)
             else:
-                quotes_list.append(str(parsed).strip())
+                q_str = str(parsed).strip()
+                if q_str and q_str not in quotes_list:
+                    quotes_list.append(q_str)
         except Exception:
-            quotes_list.extend([q.strip() for q in raw.split("---") if q.strip()])
+            for q in raw.split("---"):
+                q_str = q.strip()
+                if q_str and q_str not in quotes_list:
+                    quotes_list.append(q_str)
 
     if len(quotes_list) < 2:
         raise HTTPException(
             400,
-            f"University procurement rules (> ₹20,000) require at least 2 competitive vendor quotations. Received {len(quotes_list)} valid quotation(s)."
+            f"University procurement rules require at least 2 competitive vendor quotations. Received {len(quotes_list)} valid quotation(s). Please attach 2 or more quotation files (PDF, DOCX, XLSX, TXT) or click 'Load Sample Quotations'."
         )
 
-    analysis = analyze_proposals(title, department, quotes_list)
+    analysis = analyze_proposals(clean_title, clean_dept, quotes_list)
     prop_id = save_proposal(analysis)
     full_prop = get_proposal_full(prop_id)
     full_prop["comparative_statement_markdown"] = analysis.get("comparative_statement_markdown")
