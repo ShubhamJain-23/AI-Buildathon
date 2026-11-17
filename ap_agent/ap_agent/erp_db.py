@@ -7,10 +7,27 @@ from decimal import Decimal as D
 from datetime import date, datetime
 from typing import Dict, List, Optional, Any
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "erp_system.db")
+DEFAULT_DB_PATH = os.path.join(os.path.dirname(__file__), "erp_system.db")
+DB_PATH = os.environ.get("ERP_DB_PATH")
+
+def _resolve_db_path() -> str:
+    global DB_PATH
+    if DB_PATH:
+        return DB_PATH
+    # In serverless environments (Cloud Functions, Lambda), use /tmp if local dir is read-only
+    target_dir = os.path.dirname(__file__)
+    if not os.access(target_dir, os.W_OK) or os.environ.get("K_SERVICE") or os.environ.get("FUNCTION_TARGET"):
+        import tempfile, shutil
+        tmp_db = os.path.join(tempfile.gettempdir(), "erp_system.db")
+        if not os.path.exists(tmp_db) and os.path.exists(DEFAULT_DB_PATH):
+            shutil.copy2(DEFAULT_DB_PATH, tmp_db)
+        DB_PATH = tmp_db
+    else:
+        DB_PATH = DEFAULT_DB_PATH
+    return DB_PATH
 
 def get_connection():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(_resolve_db_path())
     conn.row_factory = sqlite3.Row
     return conn
 

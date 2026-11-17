@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JKLU | Intelligent Autonomous Procurement & AP Automation Agent (PS-09)</title>
+  <!-- Tailwind CSS & Inter / JetBrains Mono Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            jklu: {
+              blue: '#0136A1',
+              navy: '#0B2545',
+              darkblue: '#00226B',
+              lightblue: '#1E56CF',
+              orange: '#F58220',
+              darkorange: '#D96E14',
+              surface: '#FFFFFF',
+              canvas: '#F8FAFC',
+              border: '#E2E8F0',
+              subtle: '#F1F5F9'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --jklu-blue: #0136A1;
+      --jklu-navy: #0B2545;
+      --jklu-orange: #F58220;
+      --jklu-orange-hover: #D96E14;
+    }
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .dropzone-active { border-color: #0136A1 !important; background-color: rgba(1, 54, 161, 0.04) !important; }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] text-slate-800 min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- TOP BRAND ACCENT STRIPE (JKLU BRAND COLORS: ROYAL BLUE & VIBRANT ORANGE) -->
+  <div class="h-1.5 w-full bg-gradient-to-r from-[#0136A1] via-[#F58220] to-[#0136A1]"></div>
+
+  <!-- TOP NAVBAR WITH OFFICIAL JKLU UNIVERSITY IDENTITY -->
+  <header class="border-b border-slate-200/90 bg-white/95 backdrop-blur-md sticky top-0 z-50 px-6 py-3.5 flex items-center justify-between shadow-xs">
+    <div class="flex items-center space-x-3.5">
+      <!-- JKLU Crest / Monogram -->
+      <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-[#0136A1] via-[#092257] to-[#F58220] flex items-center justify-center shadow-md shadow-blue-900/10 border border-slate-100">
+        <div class="text-white font-black text-sm tracking-widest flex items-center">
+          <span>JK</span><span class="text-[#F58220] font-extrabold text-xs ml-0.5">LU</span>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <span class="font-black text-base tracking-tight text-slate-900 uppercase">JK Lakshmipat University</span>
+          <span class="text-[11px] bg-orange-50 text-orange-700 font-bold px-2 py-0.5 rounded-md border border-orange-200/80">PS-09 AP Agent</span>
+          <span class="text-[11px] bg-blue-50 text-blue-700 font-semibold px-2 py-0.5 rounded-md border border-blue-200/80 hidden sm:inline-block">Jaipur, Rajasthan</span>
+        </div>
+        <p class="text-xs text-slate-500 font-medium">Official University ERP Requisition, Multi-Quotation Scrutiny & 3-Way Matching Layer</p>
+      </div>
+    </div>
+
+    <!-- Live Liabilities & Navigation Links -->
+    <div class="flex items-center space-x-4">
+      <div class="bg-slate-50 border border-slate-200/90 rounded-md px-3.5 py-1.5 flex items-center space-x-3.5 shadow-2xs">
+        <div>
+          <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">ERP Outstanding Liability</div>
+          <div id="top-liability" class="text-sm font-bold text-slate-900 mono">₹0.00</div>
+        </div>
+        <div class="h-6 w-px bg-slate-200"></div>
+        <div>
+          <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Active Invoices</div>
+          <div id="top-invoices-count" class="text-sm font-bold text-blue-700 mono">0</div>
+        </div>
+      </div>
+
+      <button onclick="openApiKeyModal()" class="px-3.5 py-2 rounded-md border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center space-x-1.5 transition shadow-2xs">
+        <i class="fa-solid fa-key text-[#F58220]"></i>
+        <span>Gemini Key</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- WORKFLOW PHASE & DOCS SELECTOR -->
+  <div class="bg-slate-100/70 border-b border-slate-200/80 px-6 py-2.5 flex items-center justify-between">
+    <div class="flex items-center space-x-2">
+      <button id="btn-mode-quotations" onclick="switchWorkflowMode('quotations')" class="px-4 py-2 rounded-md text-xs font-bold transition flex items-center space-x-2 bg-[#0136A1] text-white shadow-xs">
+        <i class="fa-solid fa-file-contract"></i>
+        <span>Phase 1: Pre-PO Quotation Scrutiny (> ₹20,000 Rule)</span>
+      </button>
+      <button id="btn-mode-invoices" onclick="switchWorkflowMode('invoices')" class="px-4 py-2 rounded-md text-xs font-bold transition flex items-center space-x-2 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200 shadow-2xs">
+        <i class="fa-solid fa-receipt text-[#0136A1]"></i>
+        <span>Phase 2: Post-PO 3-Way Matching & ERP Settlement</span>
+      </button>
+      <button id="btn-mode-docs" onclick="switchWorkflowMode('docs')" class="px-4 py-2 rounded-md text-xs font-bold transition flex items-center space-x-2 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200 shadow-2xs">
+        <i class="fa-solid fa-book-bookmark text-[#F58220]"></i>
+        <span>System Documentation & Architecture</span>
+      </button>
+    </div>
+    <div class="text-[11px] text-slate-500 font-medium hidden md:flex items-center space-x-1.5">
+      <i class="fa-solid fa-building-columns text-[#0136A1]"></i>
+      <span>JKLU Institutional Coverage: IET • IM • ID • Admin • Hostels • MDC • Accounts</span>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- PHASE 1: QUOTATION SCRUTINY, MULTI-FACTOR ANALYSIS & 4-TIER APPROVAL FLOW -->
+  <!-- ========================================================================= -->
+  <div id="section-quotations" class="p-6 space-y-6 flex-1">
+
+    <!-- INSTITUTIONAL RULE NOTIFICATION BANNER -->
+    <div class="bg-gradient-to-r from-blue-50/70 via-white to-amber-50/40 border border-blue-100/90 rounded-lg p-4 flex items-start space-x-3.5 shadow-2xs">
+      <div class="w-9 h-9 rounded-md bg-blue-100 text-[#0136A1] flex items-center justify-center shrink-0 mt-0.5 border border-blue-200/80">
+        <i class="fa-solid fa-scale-balanced text-sm"></i>
+      </div>
+      <div class="text-xs">
+        <div class="font-bold text-slate-900 mb-0.5 flex items-center space-x-2">
+          <span>JKLU Financial & Procurement Governance Policy (SOP-FIN-09)</span>
+          <span class="text-[10px] bg-[#0136A1] text-white px-2 py-0.5 rounded-md font-mono font-semibold">Rule > ₹20,000</span>
+        </div>
+        <p class="text-slate-600 leading-relaxed">
+          For expenses exceeding <b class="text-orange-700">₹20,000</b>, the respective department HoD initiates requisition by attaching 2–3+ competing vendor quotation documents (<b class="text-slate-800">PDF, Excel, Word, PPT, Image, Markdown</b>). The AI Maker extracts specifications, computes weighted scoring (<b class="text-slate-800">Price 40%, Delivery 20%, Warranty 20%, After-Sales Service SLA 20%</b>) and <b class="text-[#0136A1]">automatically benchmarks market prices against GeM Portal, Amazon Business, and IndiaMART</b>. Approved proposals route through: <b class="text-slate-800">HoD Initiation → Purchase Officer Scrutiny → Accounts Budget Clearance → CFO Final Sanction</b>.
+        </p>
+      </div>
+    </div>
+
+    <!-- PROPOSAL CREATION & SCRUTINY GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- LEFT: PROPOSAL INTAKE FORM (5 Cols) -->
+      <div class="lg:col-span-5 bg-white border border-slate-200/80 rounded-lg p-5 shadow-xs space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-200/80 pb-3">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-folder-open text-[#0136A1] text-sm"></i>
+            <h3 class="text-sm font-bold text-slate-900">HoD Requisition & Document Ingestion</h3>
+          </div>
+          <span class="text-[10px] bg-slate-100 text-slate-600 font-medium px-2 py-0.5 rounded-md border border-slate-200">Multi-Format Upload</span>
+        </div>
+
+        <form id="proposal-form" onsubmit="handleProposalScrutiny(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Select JKLU Department / Institute</label>
+            <select id="prop-dept" onchange="updateDeptMeta()" class="w-full bg-white border border-slate-300 rounded-md p-2.5 text-xs text-slate-900 focus:border-[#0136A1] focus:ring-2 focus:ring-blue-600/10 focus:outline-none">
+              <!-- Populated by JS with all 12 departments -->
+            </select>
+            <!-- Real Sourced HoD & Budget Info Card -->
+            <div id="dept-budget-note" class="text-[11px] p-2.5 rounded-md bg-slate-50 border border-slate-200 text-slate-700 mt-2 leading-relaxed">
+              Loading department leadership & budget info from jklu.edu.in...
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Requisition Title / Procurement Goal</label>
+            <input type="text" id="prop-title" required class="w-full bg-white border border-slate-300 rounded-md p-2.5 text-xs text-slate-900 focus:border-[#0136A1] focus:ring-2 focus:ring-blue-600/10 focus:outline-none placeholder-slate-400" placeholder="e.g. 10 High-Performance Workstation Laptops for AI Lab">
+          </div>
+
+          <!-- DRAG-AND-DROP MULTI-FILE UPLOAD ZONE -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-xs font-semibold text-slate-700 flex items-center space-x-1.5">
+                <i class="fa-solid fa-paperclip text-[#0136A1]"></i>
+                <span>Attach Vendor Quotations (Min. 2-3 Files)</span>
+              </label>
+              <div class="flex items-center space-x-2">
+                <button type="button" onclick="loadSampleQuotations()" class="text-[10px] bg-blue-50 text-[#0136A1] hover:bg-blue-100 font-semibold px-2 py-0.5 rounded border border-blue-200 transition flex items-center space-x-1 cursor-pointer" title="Auto-populate sample bids for Dell, MicroTech, Lenovo">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                  <span>Load Sample Quotations</span>
+                </button>
+                <span id="files-count-badge" class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200 font-medium">0 files attached</span>
+              </div>
+            </div>
+
+            <!-- Drop Zone -->
+            <div id="prop-dropzone" 
+                 ondragover="handleDragOver(event)" 
+                 ondragleave="handleDragLeave(event)" 
+                 ondrop="handleFileDrop(event)"
+                 onclick="document.getElementById('prop-file-input').click()" 
+                 class="border-2 border-dashed border-slate-300 hover:border-[#0136A1] bg-slate-50/70 hover:bg-blue-50/20 rounded-lg p-5 text-center cursor-pointer transition duration-200 group">
+              <input type="file" id="prop-file-input" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.xlsx,.xls,.csv,.docx,.doc,.pptx,.ppt,.md,.txt" class="hidden" onchange="handleQuotationFiles(this.files)">
+              <div class="w-12 h-12 rounded-lg bg-blue-50 group-hover:bg-[#0136A1] text-[#0136A1] group-hover:text-white flex items-center justify-center mx-auto mb-2 transition">
+                <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+              </div>
+              <div class="text-xs font-semibold text-slate-800 mb-1">
+                Drag & drop vendor quotation files here, or <span class="text-[#0136A1] underline group-hover:text-blue-800">browse files</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-3">Attach official vendor quotations in PDF, Excel, Word, PPTX, or Image format</p>
+              
+              <!-- Format Tags -->
+              <div class="flex flex-wrap justify-center gap-1.5">
+                <span class="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 text-[10px] font-mono border border-rose-200 font-semibold">PDF</span>
+                <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-mono border border-emerald-200 font-semibold">Excel / CSV</span>
+                <span class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-mono border border-blue-200 font-semibold">DOCX / Word</span>
+                <span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 text-[10px] font-mono border border-amber-200 font-semibold">PPTX / Slides</span>
+                <span class="px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 text-[10px] font-mono border border-purple-200 font-semibold">Images</span>
+                <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-mono border border-slate-200 font-semibold">Markdown</span>
+              </div>
+            </div>
+
+            <!-- Attached Files List Container -->
+            <div id="prop-files-container" class="mt-3 space-y-2 max-h-48 overflow-y-auto pr-1">
+              <!-- Populated by JS when files are attached -->
+            </div>
+          </div>
+
+          <button type="submit" id="btn-scrutinize" class="w-full py-2.5 bg-[#0136A1] hover:bg-[#00226B] text-white rounded-md text-xs font-bold shadow-sm flex items-center justify-center space-x-2 transition">
+            <i class="fa-solid fa-microchip"></i>
+            <span>Run Autonomous Scrutiny & Market Benchmarking</span>
+          </button>
+        </form>
+
+        <!-- AUTONOMOUS MARKET INTELLIGENCE BADGE -->
+        <div class="pt-4 border-t border-slate-200">
+          <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 flex items-start space-x-3 shadow-2xs">
+            <div class="w-8 h-8 rounded-md bg-blue-100 text-[#0136A1] flex items-center justify-center shrink-0 mt-0.5 border border-blue-200">
+              <i class="fa-solid fa-bolt-lightning text-sm"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-slate-900 flex items-center space-x-2">
+                <span>Autonomous B2B Market Search Engine</span>
+                <span class="text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded-md border border-emerald-200">Active</span>
+              </div>
+              <p class="text-[11px] text-slate-600 leading-relaxed mt-0.5">
+                Line items are automatically parsed and queried across <b>GeM Portal</b>, <b>Amazon Business</b>, and <b>IndiaMART</b> in real time. Zero manual query typing or URL pasting required.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: COMPARATIVE STATEMENT & 4-TIER APPROVAL FLOW (7 Cols) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <div id="proposal-results-card" class="bg-white border border-slate-200/80 rounded-lg p-5 shadow-xs hidden space-y-5">
+          <div class="flex items-start justify-between border-b border-slate-200 pb-3">
+            <div>
+              <div class="flex items-center space-x-3 mb-1">
+                <h2 id="prop-disp-title" class="text-base font-bold text-slate-900">Proposal Title</h2>
+                <span id="prop-disp-status" class="px-2.5 py-0.5 rounded-md text-xs font-bold uppercase border bg-amber-50 text-amber-800 border-amber-200">PENDING_HOD</span>
+              </div>
+              <p class="text-xs text-slate-500">Department: <span id="prop-disp-dept" class="text-[#0136A1] font-semibold">IET</span> • Requisition ID: <span id="prop-disp-id" class="text-slate-800 mono font-medium">PROP-01</span></p>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] uppercase text-slate-500 font-semibold tracking-wider">Recommended Bid</div>
+              <div id="prop-disp-amount" class="text-xl font-extrabold text-emerald-700 mono">₹0.00</div>
+            </div>
+          </div>
+
+          <!-- COMPARATIVE STATEMENT SUMMARY -->
+          <div id="prop-summary-markdown" class="p-3.5 bg-slate-50 border border-slate-200 rounded-md text-xs leading-relaxed text-slate-700"></div>
+
+          <!-- MULTI-CRITERIA QUOTATION COMPARISON TABLE -->
+          <div>
+            <div class="text-xs font-bold text-slate-900 mb-2 flex items-center justify-between">
+              <span>JKLU Multi-Factor Evaluation Matrix (Weighted Scoring)</span>
+              <span class="text-[10px] text-slate-500">Commercial 40% • Delivery 20% • Warranty 20% • Service SLA 20%</span>
+            </div>
+            <div class="overflow-x-auto border border-slate-200 rounded-md shadow-2xs">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-semibold tracking-wider mono border-b border-slate-200">
+                  <tr>
+                    <th class="p-2.5">Vendor Bidder</th>
+                    <th class="p-2.5">Total (₹)</th>
+                    <th class="p-2.5">Delivery</th>
+                    <th class="p-2.5">Warranty</th>
+                    <th class="p-2.5">Service SLA</th>
+                    <th class="p-2.5">Score</th>
+                    <th class="p-2.5">Verdict</th>
+                  </tr>
+                </thead>
+                <tbody id="quotation-comparison-tbody" class="divide-y divide-slate-100">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- AUTOMATIC ONLINE MARKET PRICE BENCHMARKING TABLE -->
+          <div>
+            <div class="text-xs font-bold text-slate-900 mb-2 flex items-center justify-between">
+              <span class="flex items-center space-x-1.5">
+                <i class="fa-solid fa-globe text-blue-600"></i>
+                <span>Automated Market Price Verification & Benchmark</span>
+              </span>
+              <span class="text-[10px] text-orange-700 font-semibold">GeM Portal • Amazon Business • IndiaMART</span>
+            </div>
+            <div class="overflow-x-auto border border-slate-200 rounded-md shadow-2xs">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-semibold tracking-wider mono border-b border-slate-200">
+                  <tr>
+                    <th class="p-2.5">Item Name</th>
+                    <th class="p-2.5">Quoted Unit Price</th>
+                    <th class="p-2.5">Market Benchmark</th>
+                    <th class="p-2.5">Fair Range</th>
+                    <th class="p-2.5">Variance vs Market</th>
+                    <th class="p-2.5">Market Source</th>
+                  </tr>
+                </thead>
+                <tbody id="market-bench-tbody" class="divide-y divide-slate-100">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 4-STEP INSTITUTIONAL APPROVAL STEPPER WITH OFFICIAL JKLU OFFICERS -->
+          <div class="pt-4 border-t border-slate-200">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-xs font-bold text-slate-900 flex items-center space-x-2">
+                <span>JKLU 4-Tier Institutional Governance Workflow</span>
+                <span class="text-[10px] bg-[#0136A1] text-white px-2 py-0.5 rounded-md font-mono font-semibold">Mandatory Approval Gate</span>
+              </div>
+              <span class="text-[11px] text-orange-700 font-semibold">Expense > ₹20,000 Threshold</span>
+            </div>
+
+            <div id="prop-approval-stepper" class="grid grid-cols-4 gap-2 text-center text-xs mb-4">
+              <!-- Populated by JS -->
+            </div>
+
+            <!-- Action Buttons for Current Approver -->
+            <div id="prop-action-box" class="bg-slate-50 p-4 rounded-md border border-slate-200 flex items-center justify-between">
+              <div>
+                <div id="action-role-title" class="text-xs font-bold text-slate-900">Step Sign-off Action</div>
+                <div id="action-role-desc" class="text-[11px] text-slate-600">Authorize proposal to forward to the next institutional governance gate.</div>
+              </div>
+              <div class="flex space-x-2">
+                <button onclick="submitProposalDecision(true)" id="btn-prop-approve" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-xs font-bold shadow-xs transition">Approve & Advance</button>
+                <button onclick="submitProposalDecision(false)" id="btn-prop-reject" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-md text-xs font-bold shadow-xs transition">Reject</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="prop-placeholder" class="bg-white border-2 border-dashed border-slate-200 rounded-lg p-12 text-center text-slate-500 shadow-2xs">
+          <i class="fa-solid fa-file-contract text-4xl mb-3 text-slate-400"></i>
+          <h3 class="text-base font-bold text-slate-800 mb-1">No Requisition Analyzed Yet</h3>
+          <p class="text-xs max-w-md mx-auto text-slate-500">Provide a procurement requisition title and attach 2 or more vendor quotation files (PDF, Image, Excel, DOCX, PPT, Markdown) to initiate autonomous multi-factor scrutiny and automated market benchmarking.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- PHASE 2: INVOICE 3-WAY MATCHING & SETTLEMENT                              -->
+  <!-- ========================================================================= -->
+  <div id="section-invoices" class="p-6 space-y-6 flex-1 hidden">
+
+    <!-- MAKER-CHECKER ROLE TABS -->
+    <div class="bg-white border border-slate-200/80 rounded-lg px-4 py-2 flex items-center space-x-3 shadow-2xs">
+      <div class="text-xs uppercase font-semibold tracking-wider text-slate-500 mr-2">Active Checker View:</div>
+      <div class="flex space-x-2">
+        <button id="tab-maker" onclick="switchRole('maker')" class="px-3.5 py-1.5 rounded-md text-xs font-semibold flex items-center space-x-2 transition bg-[#0136A1] text-white shadow-xs border border-[#0136A1]">
+          <i class="fa-solid fa-robot text-[#F58220]"></i>
+          <span>AI Agent Maker</span>
+        </button>
+        <button id="tab-procurement" onclick="switchRole('procurement')" class="px-3.5 py-1.5 rounded-md text-xs font-semibold flex items-center space-x-2 transition bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200">
+          <i class="fa-solid fa-boxes-packing text-amber-500"></i>
+          <span>Procurement Officer View</span>
+        </button>
+        <button id="tab-accounts" onclick="switchRole('accounts')" class="px-3.5 py-1.5 rounded-md text-xs font-semibold flex items-center space-x-2 transition bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200">
+          <i class="fa-solid fa-file-invoice-dollar text-emerald-600"></i>
+          <span>Accounts Division View</span>
+        </button>
+        <button id="tab-department" onclick="switchRole('department')" class="px-3.5 py-1.5 rounded-md text-xs font-semibold flex items-center space-x-2 transition bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200">
+          <i class="fa-solid fa-building-columns text-blue-600"></i>
+          <span>Respective Department View</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN DASHBOARD FOR INVOICES -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- LEFT COLUMN: INTAKE & AGENT OBSERVABILITY (Cols 1-5) -->
+      <div class="lg:col-span-5 space-y-6">
+
+        <!-- INVOICE INTAKE CARD -->
+        <div class="bg-white border border-slate-200/80 rounded-lg p-5 shadow-xs">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-cloud-arrow-up text-[#0136A1]"></i>
+              <h2 class="text-sm font-bold text-slate-900">Invoice Ingestion Gateway</h2>
+            </div>
+            <span class="text-[10px] bg-slate-100 text-slate-600 font-medium px-2 py-0.5 rounded-md border border-slate-200">PDF / OCR / Text</span>
+          </div>
+
+          <form id="intake-form" onsubmit="handleIntake(event)" class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Invoice Text / EDI Stream</label>
+              <textarea id="invoice-text" rows="5" class="w-full bg-white border border-slate-300 rounded-md p-2.5 text-xs text-slate-800 mono focus:border-[#0136A1] focus:ring-2 focus:ring-blue-600/10 focus:outline-none placeholder-slate-400" placeholder="Paste official Tax Invoice text (e.g. from vendor billing EDI stream) or upload document below..."></textarea>
+            </div>
+
+            <div class="flex items-center space-x-3">
+              <label class="flex-1 cursor-pointer bg-slate-50 hover:bg-slate-100 border border-slate-300 border-dashed rounded-md py-2 px-3 flex items-center justify-center space-x-2 text-xs text-slate-700 transition">
+                <i class="fa-solid fa-file-pdf text-rose-500"></i>
+                <span id="file-label">Upload PDF / Scan</span>
+                <input type="file" id="invoice-file" accept=".pdf,image/*" class="hidden" onchange="fileSelected(this)">
+              </label>
+              <button type="submit" id="btn-submit" class="px-4 py-2 bg-[#0136A1] hover:bg-[#00226B] text-white rounded-md text-xs font-bold shadow-xs flex items-center space-x-1.5 transition">
+                <i class="fa-solid fa-play"></i>
+                <span>Run Agent Maker</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- GLASS-BOX OBSERVABILITY CONSOLE -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-5 shadow-md flex flex-col h-[520px] text-slate-200">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-sm bg-[#F58220]"></span>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">Glass-Box Agent Reasoning Logs</h3>
+            </div>
+            <span class="text-[10px] text-slate-400 mono">ReAct • MCP Tools • Reflection</span>
+          </div>
+
+          <div id="agent-logs" class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs mono">
+            <div class="text-slate-500 text-center py-10">
+              <i class="fa-solid fa-terminal text-2xl mb-2 opacity-50"></i>
+              <p>Agent is standing by. Ingest an invoice or upload vendor quotations to view autonomous ReAct planning, MCP tool execution, and reflection traces.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: DYNAMIC MAKER-CHECKER VIEWS (Cols 6-12) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- CURRENT AUDITED INVOICE HEADER -->
+        <div id="invoice-header-card" class="bg-white border border-slate-200/80 rounded-lg p-5 shadow-xs hidden">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center space-x-3 mb-1">
+                <h2 id="disp-inv-no" class="text-lg font-bold text-slate-900 mono">INV-001</h2>
+                <span id="disp-status-badge" class="px-2.5 py-0.5 rounded-md text-xs font-bold uppercase border">PENDING</span>
+                <span id="disp-confidence-badge" class="px-2 py-0.5 rounded-md text-[10px] bg-slate-100 text-slate-700 mono border border-slate-200 font-medium">Confidence: 1.00</span>
+              </div>
+              <p class="text-xs text-slate-600">Vendor: <span id="disp-vendor-name" class="text-slate-900 font-medium">Vendor Name</span> • Ref PO: <span id="disp-po-no" class="text-[#0136A1] font-semibold mono">PO-XXXX</span></p>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] uppercase text-slate-500 font-semibold tracking-wider">Gross Total</div>
+              <div id="disp-total" class="text-xl font-extrabold text-slate-900 mono">₹0.00</div>
+            </div>
+          </div>
+
+          <!-- MAKER VERDICT BOX -->
+          <div id="maker-verdict-box" class="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-md text-xs leading-relaxed text-slate-700"></div>
+
+          <!-- DoA APPROVAL STEPPER -->
+          <div class="mt-4 pt-4 border-t border-slate-200">
+            <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2">Delegation of Authority (DoA) Approval Chain</div>
+            <div id="doa-stepper" class="flex items-center space-x-2"></div>
+          </div>
+        </div>
+
+        <!-- VIEW 1: PROCUREMENT OFFICER CHECKER VIEW -->
+        <div id="view-procurement" class="bg-white border border-slate-200/80 rounded-lg p-5 shadow-xs hidden space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-boxes-packing text-amber-500 text-base"></i>
+              <h3 class="text-sm font-bold text-slate-900">Checker View: Procurement Officer (JKLU Administration)</h3>
+            </div>
+            <span class="text-xs bg-amber-50 text-amber-800 px-2.5 py-0.5 rounded-md border border-amber-200 font-medium">PO Fulfillment & 3-Way Match</span>
+          </div>
+
+          <div id="procurement-alerts" class="space-y-2"></div>
+
+          <!-- 3-WAY MATCHING RECONCILIATION TABLE -->
+          <div>
+            <div class="text-xs font-semibold text-slate-700 mb-2">Line-by-Line 3-Way Reconciliation Matrix</div>
+            <div class="overflow-x-auto border border-slate-200 rounded-md shadow-2xs">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-semibold tracking-wider mono border-b border-slate-200">
+                  <tr>
+                    <th class="p-2.5">Item Code</th>
+                    <th class="p-2.5">Ordered (PO)</th>
+                    <th class="p-2.5">Received (GRN)</th>
+                    <th class="p-2.5">Billed (Inv)</th>
+                    <th class="p-2.5">PO Price</th>
+                    <th class="p-2.5">Billed Price</th>
+                    <th class="p-2.5">Variance</th>
+                  </tr>
+                </thead>
+                <tbody id="matrix-tbody" class="divide-y divide-slate-100"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-md border border-slate-200 flex items-center justify-between">
+            <div>
+              <div class="text-xs font-semibold text-slate-900">Procurement Verification Sign-off</div>
+              <div class="text-[11px] text-slate-600">Confirm goods receipt against purchase order specifications.</div>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="submitDecision('DEPARTMENT_HEAD', true)" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-xs font-semibold shadow-2xs">Confirm Delivery</button>
+              <button onclick="submitDecision('DEPARTMENT_HEAD', false)" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-md text-xs font-semibold shadow-2xs">Dispute Delivery</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 2: ACCOUNTS DIVISION CHECKER VIEW -->
+        <div id="view-accounts" class="bg-white border border-slate-200/80 rounded-lg p-5 shadow-xs hidden space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-file-invoice-dollar text-emerald-600 text-base"></i>
+              <h3 class="text-sm font-bold text-slate-900">Checker View: Accounts Division (Payable & Tax)</h3>
+            </div>
+            <span class="text-xs bg-emerald-50 text-emerald-800 px-2.5 py-0.5 rounded-md border border-emerald-200 font-medium">Tax & Treasury</span>
+          </div>
+
+          <div id="accounts-alerts" class="space-y-2"></div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-slate-50 p-4 rounded-md border border-slate-200">
+              <div class="text-xs font-bold text-slate-900 mb-2 flex items-center justify-between">
+                <span>Compliance & Optimization</span>
+                <i class="fa-solid fa-shield-halved text-[#F58220]"></i>
+              </div>
+              <div class="space-y-2 text-xs">
+                <div class="flex justify-between">
+                  <span class="text-slate-500">MSME Statutory Due:</span>
+                  <span id="acc-msme-due" class="font-semibold text-slate-800 mono">-</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Early-Pay Discount:</span>
+                  <span id="acc-discount-saving" class="font-bold text-emerald-700 mono">₹0.00</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Scheduled Pay Date:</span>
+                  <span id="acc-pay-on" class="font-semibold text-slate-800 mono">-</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-md border border-slate-200">
+              <div class="text-xs font-bold text-slate-900 mb-2 flex items-center justify-between">
+                <span>Double-Entry Ledger Draft</span>
+                <span class="text-[10px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 mono font-semibold">Balanced</span>
+              </div>
+              <div id="acc-ledger-entries" class="space-y-1.5 text-[11px] mono"></div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-md border border-slate-200 flex items-center justify-between">
+            <div>
+              <div class="text-xs font-semibold text-slate-900">Finance Controller Sign-off & Disbursement</div>
+              <div class="text-[11px] text-slate-600">Authorizes Accounts Payable liability posting and treasury payment release.</div>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="submitDecision('FINANCE_CONTROLLER', true)" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-xs font-bold shadow-2xs">Approve AP Ledger</button>
+              <button onclick="executePaymentNow()" class="px-3.5 py-1.5 bg-[#0136A1] hover:bg-[#00226B] text-white rounded-md text-xs font-bold shadow-2xs">Disburse Bank Payout</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 3: RESPECTIVE DEPARTMENT CHECKER VIEW -->
+        <div id="view-department" class="bg-white border border-slate-200/80 rounded-lg p-5 shadow-xs hidden space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-building-columns text-blue-600 text-base"></i>
+              <h3 class="text-sm font-bold text-slate-900">Checker View: Respective Department</h3>
+            </div>
+            <span id="dept-name-badge" class="text-xs bg-blue-50 text-blue-800 px-2.5 py-0.5 rounded-md border border-blue-200 font-medium">Department</span>
+          </div>
+
+          <div id="department-alerts" class="space-y-2"></div>
+
+          <div class="bg-slate-50 p-4 rounded-md border border-slate-200 space-y-3">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-slate-900">Department Fiscal Budget Utilization</span>
+              <span id="dept-util-pct" class="font-bold mono text-orange-700">0%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2.5 rounded-md overflow-hidden border border-slate-300">
+              <div id="dept-util-bar" class="bg-gradient-to-r from-[#0136A1] via-blue-500 to-[#F58220] h-full rounded-md transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <div class="grid grid-cols-4 gap-2 pt-2 text-center text-xs">
+              <div class="p-2 bg-white rounded-md border border-slate-200 shadow-2xs">
+                <div class="text-[10px] text-slate-500 font-medium uppercase">Allocated</div>
+                <div id="dept-allocated" class="font-bold text-slate-900 mono mt-0.5">₹0.00</div>
+              </div>
+              <div class="p-2 bg-white rounded-md border border-slate-200 shadow-2xs">
+                <div class="text-[10px] text-slate-500 font-medium uppercase">Actual Spend</div>
+                <div id="dept-actual" class="font-bold text-emerald-700 mono mt-0.5">₹0.00</div>
+              </div>
+              <div class="p-2 bg-white rounded-md border border-slate-200 shadow-2xs">
+                <div class="text-[10px] text-slate-500 font-medium uppercase">Encumbered</div>
+                <div id="dept-committed" class="font-bold text-orange-700 mono mt-0.5">₹0.00</div>
+              </div>
+              <div class="p-2 bg-white rounded-md border border-slate-200 shadow-2xs">
+                <div class="text-[10px] text-slate-500 font-medium uppercase">Available</div>
+                <div id="dept-available" class="font-bold text-blue-700 mono mt-0.5">₹0.00</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-md border border-slate-200 flex items-center justify-between">
+            <div>
+              <div class="text-xs font-semibold text-slate-900">Department Head Budget Authorization</div>
+              <div class="text-[11px] text-slate-600">Verifies departmental requisition and authorizes encumbrance release.</div>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="submitDecision('DEPARTMENT_HEAD', true)" class="px-3.5 py-1.5 bg-[#0136A1] hover:bg-[#00226B] text-white rounded-md text-xs font-semibold shadow-2xs">Authorize Budget Charge</button>
+              <button onclick="submitDecision('DEPARTMENT_HEAD', false)" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-md text-xs font-semibold shadow-2xs">Reject Charge</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="no-invoice-placeholder" class="bg-white border-2 border-dashed border-slate-200 rounded-lg p-12 text-center text-slate-500 shadow-2xs">
+          <i class="fa-solid fa-file-invoice text-4xl mb-3 text-slate-400"></i>
+          <h3 class="text-base font-bold text-slate-800 mb-1">No Invoice Selected</h3>
+          <p class="text-xs max-w-md mx-auto text-slate-500">Provide invoice raw text or upload an invoice document (PDF / Scan) to initiate the autonomous Maker-Checker audit and 3-way matching.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- DOCUMENTATION & ARCHITECTURE (3 MANDATORY SUBSECTIONS)                    -->
+  <!-- ========================================================================= -->
+  <div id="section-docs" class="p-6 space-y-8 flex-1 hidden">
+
+    <!-- DOCS HEADER BANNER -->
+    <div class="bg-white border border-slate-200/90 rounded-lg p-6 shadow-xs">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-5">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-[#0136A1] bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">Technical Documentation</span>
+            <span class="text-xs font-mono text-slate-500">Version 1.0 • PS-09 Spec</span>
+          </div>
+          <h1 class="text-xl font-black text-slate-900 mt-1">APEX-AP: Autonomous Accounts Payable & Procurement Agent</h1>
+          <p class="text-xs text-slate-600 mt-0.5">Comprehensive Guide, REST API Reference, and FastMCP Integration for JKLU University ERP</p>
+        </div>
+        <div class="flex items-center space-x-2 shrink-0">
+          <a href="#doc-sub-1" class="px-3 py-1.5 rounded-md bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold">1. Product & Scope</a>
+          <a href="#doc-sub-2" class="px-3 py-1.5 rounded-md bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold">2. API Reference</a>
+          <a href="#doc-sub-3" class="px-3 py-1.5 rounded-md bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold">3. MCP Server</a>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="p-3 bg-slate-50 rounded-md border border-slate-200">
+          <div class="font-bold text-slate-900 mb-1 flex items-center space-x-1.5">
+            <i class="fa-solid fa-scale-balanced text-[#0136A1]"></i>
+            <span>Governance Rule (SOP-FIN-09)</span>
+          </div>
+          <p class="text-slate-600">Requisitions exceeding ₹20,000 mandate competitive multi-quotation scrutiny with MCDA scoring and market benchmarking.</p>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-md border border-slate-200">
+          <div class="font-bold text-slate-900 mb-1 flex items-center space-x-1.5">
+            <i class="fa-solid fa-network-wired text-[#F58220]"></i>
+            <span>Maker-Checker Architecture</span>
+          </div>
+          <p class="text-slate-600">Autonomous Maker agent compiles complete dossiers; human institutional officers retain final sign-off authority.</p>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-md border border-slate-200">
+          <div class="font-bold text-slate-900 mb-1 flex items-center space-x-1.5">
+            <i class="fa-solid fa-plug text-emerald-600"></i>
+            <span>Model Context Protocol</span>
+          </div>
+          <p class="text-slate-600">Standardized FastMCP interface decoupling the agent intelligence from the ERP SQL database schema.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBSECTION 1: PRODUCT, CAPABILITIES & LIMITATIONS (FUTURE SCOPE) -->
+    <section id="doc-sub-1" class="bg-white border border-slate-200/90 rounded-lg p-6 shadow-xs space-y-6">
+      <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <span class="w-7 h-7 rounded-md bg-[#0136A1] text-white flex items-center justify-center font-bold text-xs">1</span>
+          <h2 class="text-base font-bold text-slate-900">What This Product Does, Its Capabilities & Limitations (Future Scope)</h2>
+        </div>
+        <span class="text-xs bg-blue-50 text-blue-800 font-semibold px-2.5 py-0.5 rounded-md border border-blue-200">Overview & Scope</span>
+      </div>
+
+      <!-- 1.1 What This Product Does -->
+      <div class="space-y-2">
+        <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-2">
+          <i class="fa-solid fa-circle-info text-[#0136A1]"></i>
+          <span>What This Product Does</span>
+        </h3>
+        <p class="text-xs text-slate-700 leading-relaxed">
+          <b>APEX-AP</b> is an autonomous, enterprise-grade AI Accounts Payable and Vendor Procurement Automation Agent engineered as an intelligent top layer for higher-education institutional ERPs (such as JK Lakshmipat University, Jaipur). Sponsoring the <b>Maker-Checker operational paradigm</b>, the agent acts as an exhaustive, tireless <b>Maker</b>—ingesting vendor quotations and invoices in any format, evaluating technical and commercial trade-offs, checking market pricing, calculating taxes, verifying delivery receipts, enforcing statutory compliances, and drafting journal entries—while providing human institutional officers (Procurement Officers, Accounts Controllers, Deans, and the CFO) with tailored, high-context <b>Checker</b> views for final governance sign-offs.
+        </p>
+      </div>
+
+      <!-- 1.2 Core Capabilities Grid -->
+      <div class="space-y-3 pt-2">
+        <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-2">
+          <i class="fa-solid fa-bolt text-[#F58220]"></i>
+          <span>Core Capabilities Delivered</span>
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div class="p-4 rounded-md bg-slate-50 border border-slate-200 space-y-1.5">
+            <div class="font-bold text-slate-900 flex items-center space-x-1.5">
+              <i class="fa-solid fa-file-invoice text-blue-700"></i>
+              <span>1. Multi-Format Document Ingestion</span>
+            </div>
+            <p class="text-slate-600 leading-relaxed">Extracts structured data from PDF, Excel/CSV, Word (DOCX), PowerPoint (PPTX), Markdown, and scanned receipts via Google Gemini Multimodal Vision and deterministic regex fallback parsers.</p>
+          </div>
+
+          <div class="p-4 rounded-md bg-slate-50 border border-slate-200 space-y-1.5">
+            <div class="font-bold text-slate-900 flex items-center space-x-1.5">
+              <i class="fa-solid fa-scale-unbalanced-flip text-orange-700"></i>
+              <span>2. Multi-Criteria Decision Analysis (MCDA)</span>
+            </div>
+            <p class="text-slate-600 leading-relaxed">Evaluates competing vendor proposals beyond lowest cost ($L_1$) through weighted scoring: <b>Price 40%</b>, <b>Delivery Speed 20%</b>, <b>Warranty 20%</b>, and <b>After-Sales Service SLA 20%</b>.</p>
+          </div>
+
+          <div class="p-4 rounded-md bg-slate-50 border border-slate-200 space-y-1.5">
+            <div class="font-bold text-slate-900 flex items-center space-x-1.5">
+              <i class="fa-solid fa-globe text-emerald-700"></i>
+              <span>3. Live B2B Market Price Benchmarking</span>
+            </div>
+            <p class="text-slate-600 leading-relaxed">Automatically queries and benchmarks quoted item rates against <b>Government e-Marketplace (GeM)</b>, <b>Amazon Business</b>, and <b>IndiaMART</b> in real time to prevent institutional price gouging.</p>
+          </div>
+
+          <div class="p-4 rounded-md bg-slate-50 border border-slate-200 space-y-1.5">
+            <div class="font-bold text-slate-900 flex items-center space-x-1.5">
+              <i class="fa-solid fa-sitemap text-purple-700"></i>
+              <span>4. 4-Tier Institutional Governance Workflow</span>
+            </div>
+            <p class="text-slate-600 leading-relaxed">Enforces university Delegation of Authority (DoA): <b>HoD Requisition</b> → <b>Purchase Officer Scrutiny</b> → <b>Accounts Clearance</b> → <b>CFO Final Sanction</b> before generating binding POs.</p>
+          </div>
+
+          <div class="p-4 rounded-md bg-slate-50 border border-slate-200 space-y-1.5">
+            <div class="font-bold text-slate-900 flex items-center space-x-1.5">
+              <i class="fa-solid fa-check-double text-sky-700"></i>
+              <span>5. Line-by-Line 3-Way Reconciliation</span>
+            </div>
+            <p class="text-slate-600 leading-relaxed">Reconciles Invoices against Purchase Orders and Goods Receipt Notes (GRN). Flags price variances exceeding 2%, over-billing, unlisted items, and partial deliveries.</p>
+          </div>
+
+          <div class="p-4 rounded-md bg-slate-50 border border-slate-200 space-y-1.5">
+            <div class="font-bold text-slate-900 flex items-center space-x-1.5">
+              <i class="fa-solid fa-book text-amber-700"></i>
+              <span>6. MSME Compliance & Balanced Double-Entry</span>
+            </div>
+            <p class="text-slate-600 leading-relaxed">Enforces Indian MSME 45-day statutory payment caps, captures early-payment cash discounts (e.g. 2% Net 10), and posts balanced General Ledger entries (`DR Expense`, `DR GST`, `CR AP`).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1.3 Limitations as of Now & Future Scope -->
+      <div class="space-y-3 pt-2">
+        <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-2">
+          <i class="fa-solid fa-compass text-rose-600"></i>
+          <span>Current Limitations & Planned Future Scope</span>
+        </h3>
+        <div class="border border-slate-200 rounded-md overflow-hidden text-xs">
+          <table class="w-full text-left">
+            <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-semibold mono border-b border-slate-200">
+              <tr>
+                <th class="p-3 w-1/4">Capability Area</th>
+                <th class="p-3 w-1/3">Current Limitation (As of Now)</th>
+                <th class="p-3">Future Scope Roadmap</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-semibold text-slate-900">Direct Banking Gateway Execution</td>
+                <td class="p-3">Schedules payment vouchers and updates ERP ledger balances; does not execute live RTGS/NEFT wires.</td>
+                <td class="p-3">Direct integration with institutional corporate banking APIs (ICICI Corporate API, HDFC Enet, SBI CMP) with 2FA maker-checker token approvals.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-semibold text-slate-900">Autonomous Vendor Communication</td>
+                <td class="p-3">Flags variances and alerts human Checkers; does not directly email or message vendors.</td>
+                <td class="p-3">Bidirectional autonomous communication agent (email and WhatsApp Business API) to solicit missing e-way bills, clarify delivery shortfalls, or request credit notes.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-semibold text-slate-900">Adaptive OCR Template Self-Tuning</td>
+                <td class="p-3">Uses Gemini Vision + deterministic regex fallbacks; weights are static across all vendors.</td>
+                <td class="p-3">Few-shot adaptive learning pipeline that caches and optimizes extraction coordinates for recurring high-volume campus suppliers.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-semibold text-slate-900">International & Foreign Currency</td>
+                <td class="p-3">Strictly handles Indian Rupee (INR) and Indian GST taxation (CGST, SGST, IGST).</td>
+                <td class="p-3">Multi-currency procurement engine (USD, EUR, GBP) supporting customs clearance documentation, forex spot rate hedging, and withholding tax (TDS under Sec 195).</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-semibold text-slate-900">Predictive Budget Burn Analytics</td>
+                <td class="p-3">Tracks static allocated vs actual vs committed budget envelopes.</td>
+                <td class="p-3">Time-series forecasting (ARIMA / Prophet) alerting Deans and HoDs 60 days in advance of projected fiscal year budget exhaustion.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUBSECTION 2: API DOCUMENTATION -->
+    <section id="doc-sub-2" class="bg-white border border-slate-200/90 rounded-lg p-6 shadow-xs space-y-6">
+      <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <span class="w-7 h-7 rounded-md bg-[#0136A1] text-white flex items-center justify-center font-bold text-xs">2</span>
+          <h2 class="text-base font-bold text-slate-900">REST API Documentation & Endpoint Specification</h2>
+        </div>
+        <span class="text-xs bg-emerald-50 text-emerald-800 font-semibold px-2.5 py-0.5 rounded-md border border-emerald-200">FastAPI OpenAPI 3.1</span>
+      </div>
+
+      <p class="text-xs text-slate-600 leading-relaxed">
+        The APEX-AP backend exposes a high-performance RESTful API powering the user interface, automated document ingestion pipeline, and ERP ledger synchronization. Interactive Swagger UI is hosted at <code class="bg-slate-100 text-blue-700 px-1.5 py-0.5 rounded mono text-[11px]">/docs</code> and OpenAPI schema at <code class="bg-slate-100 text-blue-700 px-1.5 py-0.5 rounded mono text-[11px]">/openapi.json</code>.
+      </p>
+
+      <!-- API Endpoints Table -->
+      <div class="border border-slate-200 rounded-md overflow-hidden text-xs">
+        <table class="w-full text-left">
+          <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-semibold mono border-b border-slate-200">
+            <tr>
+              <th class="p-3 w-16">Method</th>
+              <th class="p-3 w-1/3">Endpoint & Group</th>
+              <th class="p-3 w-1/3">Parameters / Payload</th>
+              <th class="p-3">Description & Output</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700 font-normal">
+            <!-- Proposals -->
+            <tr class="hover:bg-slate-50">
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-bold mono text-[10px]">POST</span></td>
+              <td class="p-3 mono font-semibold text-slate-900">/proposals/scrutinize</td>
+              <td class="p-3 mono text-[11px] text-slate-600">title: str<br>department: str<br>files: List[UploadFile]</td>
+              <td class="p-3 text-slate-600">Ingests multiple vendor quotation documents, runs MCDA scoring, benchmarks prices against GeM/Amazon/IndiaMART, and returns full proposal dossier.</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold mono text-[10px]">GET</span></td>
+              <td class="p-3 mono font-semibold text-slate-900">/proposals</td>
+              <td class="p-3 mono text-[11px] text-slate-600">None</td>
+              <td class="p-3 text-slate-600">Lists all submitted procurement requisitions, their current approval gate status, and recommended vendor bid values.</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold mono text-[10px]">GET</span></td>
+              <td class="p-3 mono font-semibold text-slate-900">/proposals/{prop_id}</td>
+              <td class="p-3 mono text-[11px] text-slate-600">prop_id: str (Path)</td>
+              <td class="p-3 text-slate-600">Retrieves complete proposal dossier including extracted quotation items, comparative statement markdown, and approval audit trail.</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-bold mono text-[10px]">POST</span></td>
+              <td class="p-3 mono font-semibold text-slate-900">/proposals/{prop_id}/decision</td>
+              <td class="p-3 mono text-[11px] text-slate-600">role: str<br>approve: bool<br>acted_by: str</td>
+              <td class="p-3 text-slate-600">Advances the proposal through the 4-tier approval gate (HoD → Purchase Officer → Accounts → CFO) and issues official PO upon CFO sanction.</td>
+            </tr>
+
+            <!-- Invoices -->
+            <tr class="hover:bg-slate-50">
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-bold mono text-[10px]">POST</span></td>
+              <td class="p-3 mono font-semibold text-slate-900">/invoices/intake</td>
+              <td class="p-3 mono text-[11px] text-slate-600">text: Optional[str]<br>file: Optional[UploadFile]</td>
+              <td class="p-3 text-slate-600">Processes vendor invoice through the Maker agent, executing 3-way matching, duplicate detection, and DoA chain construction.</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold mono text-[10px]">GET</span></td>
+              <td class="p-3 mono font-semibold text-slate-900">/invoices</td>
+              <td class="p-3 mono text-[11px] text-slate-600">status: Optional[str]</td>
+              <td class="p-3 text-slate-600">Lists all audited invoices with optional filtering by status (PENDING_APPROVAL, HOLD_EXCEPTION, REJECTED_DUPLICATE, PAID).</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold mono text-[10px]">GET</span></td>
+              <td class="p-3 mono font-semibold text-slate-900">/invoices/{inv_id}</td>
+              <td class="p-3 mono text-[11px] text-slate-600">inv_id: str (Path)</td>
+              <td class="p-3 text-slate-600">Retrieves detailed invoice audit dossier including line-by-line 3-way reconciliation matrix and Procurement, Accounts, and Department views.</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-bold mono text-[10px]">POST</span></td>
+              <td class="p-3 mono font-semibold text-slate-900">/invoices/{inv_id}/decision</td>
+              <td class="p-3 mono text-[11px] text-slate-600">role: str<br>approve: bool<br>acted_by: str</td>
+              <td class="p-3 text-slate-600">Records human checker approval or exception dispute sign-off for an audited invoice.</td>
+            </tr>
+
+            <!-- Payments & ERP -->
+            <tr class="hover:bg-slate-50">
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-bold mono text-[10px]">POST</span></td>
+              <td class="p-3 mono font-semibold text-slate-900">/payments/{inv_id}/execute</td>
+              <td class="p-3 mono text-[11px] text-slate-600">inv_id: str (Path)</td>
+              <td class="p-3 text-slate-600">Executes bank disbursement voucher in the ERP ledger, clearing Accounts Payable and recording cash discounts.</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold mono text-[10px]">GET</span></td>
+              <td class="p-3 mono font-semibold text-slate-900">/erp/overview</td>
+              <td class="p-3 mono text-[11px] text-slate-600">None</td>
+              <td class="p-3 text-slate-600">Queries ERP General Ledger summary, active trial balance accounts, and outstanding AP liabilities.</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold mono text-[10px]">GET</span></td>
+              <td class="p-3 mono font-semibold text-slate-900">/departments</td>
+              <td class="p-3 mono text-[11px] text-slate-600">None</td>
+              <td class="p-3 text-slate-600">Returns list of all 12 JKLU departments, designated Dean/HoD names sourced from jklu.edu.in, and live fiscal budget balances.</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-bold mono text-[10px]">POST</span></td>
+              <td class="p-3 mono font-semibold text-slate-900">/settings/gemini_key</td>
+              <td class="p-3 mono text-[11px] text-slate-600">api_key: str</td>
+              <td class="p-3 text-slate-600">Dynamically updates Google Gemini API key for multimodal vision OCR and ReAct planning.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Sample cURL Request -->
+      <div class="space-y-1.5">
+        <div class="text-xs font-bold text-slate-900 flex items-center space-x-1.5">
+          <i class="fa-solid fa-code text-[#0136A1]"></i>
+          <span>Sample Ingestion cURL Command</span>
+        </div>
+        <pre class="p-3 rounded-md bg-slate-900 text-slate-200 font-mono text-[11px] overflow-x-auto border border-slate-800"><code>curl -X POST "http://localhost:8000/invoices/intake" \
+  -F "file=@sample_tax_invoice.pdf;type=application/pdf" \
+  -F "text="</code></pre>
+      </div>
+    </section>
+
+    <!-- SUBSECTION 3: MCP DOCUMENTATION -->
+    <section id="doc-sub-3" class="bg-white border border-slate-200/90 rounded-lg p-6 shadow-xs space-y-6">
+      <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <span class="w-7 h-7 rounded-md bg-[#0136A1] text-white flex items-center justify-center font-bold text-xs">3</span>
+          <h2 class="text-base font-bold text-slate-900">Model Context Protocol (MCP) Server Specification</h2>
+        </div>
+        <span class="text-xs bg-purple-50 text-purple-800 font-semibold px-2.5 py-0.5 rounded-md border border-purple-200">FastMCP Standard</span>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-2">
+          <i class="fa-solid fa-network-wired text-[#0136A1]"></i>
+          <span>What is the MCP Layer in APEX-AP?</span>
+        </h3>
+        <p class="text-xs text-slate-700 leading-relaxed">
+          The <b>Model Context Protocol (MCP)</b> is an open protocol that standardizes how AI applications connect with external databases, business logic, and enterprise context. In APEX-AP, the <b>FastMCP Server</b> (<code class="bg-slate-100 text-blue-700 px-1.5 py-0.5 rounded mono text-[11px]">ap_agent/erp_mcp_server.py</code>) sits cleanly between the autonomous Gemini Agent Maker and the underlying SQLite/Postgres ERP database. The agent never executes raw SQL statements; instead, it discovers and calls verified, audited MCP tools through standardized JSON-RPC schemas.
+        </p>
+      </div>
+
+      <!-- MCP Tools Table -->
+      <div class="space-y-3">
+        <div class="text-xs font-bold text-slate-900 flex items-center space-x-1.5">
+          <i class="fa-solid fa-wrench text-[#F58220]"></i>
+          <span>Declared ERP MCP Tools</span>
+        </div>
+        <div class="border border-slate-200 rounded-md overflow-hidden text-xs">
+          <table class="w-full text-left">
+            <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-semibold mono border-b border-slate-200">
+              <tr>
+                <th class="p-3 w-1/4">Tool Name</th>
+                <th class="p-3 w-1/3">Input Schema</th>
+                <th class="p-3">Functionality & Return Object</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700 font-normal">
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-semibold text-slate-900 mono">erp_lookup_vendor</td>
+                <td class="p-3 mono text-[11px] text-slate-600">{ "vendor_name": str }</td>
+                <td class="p-3 text-slate-600">Performs fuzzy match against ERP Vendor Master. Returns vendor ID, PAN/GSTIN, MSME registration status, and payment terms.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-semibold text-slate-900 mono">erp_lookup_po</td>
+                <td class="p-3 mono text-[11px] text-slate-600">{ "po_number": str }</td>
+                <td class="p-3 text-slate-600">Queries ERP Purchase Order table. Returns PO status, line items, approved quantities, unit prices, and department code.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-semibold text-slate-900 mono">erp_get_grns</td>
+                <td class="p-3 mono text-[11px] text-slate-600">{ "po_number": str }</td>
+                <td class="p-3 text-slate-600">Retrieves warehouse Goods Receipt Notes (GRN) for the specified PO. Returns inspected and accepted delivery quantities.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-semibold text-slate-900 mono">erp_check_budget</td>
+                <td class="p-3 mono text-[11px] text-slate-600">{ "department": str, "amount": float }</td>
+                <td class="p-3 text-slate-600">Validates if requisition amount is within allocated department budget. Returns available balance and over-limit alert flags.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-semibold text-slate-900 mono">erp_post_invoice_liability</td>
+                <td class="p-3 mono text-[11px] text-slate-600">{ "invoice_id": str, "subtotal": float, "tax": float, "total": float }</td>
+                <td class="p-3 text-slate-600">Posts balanced double-entry journal vouchers to the ERP General Ledger (`DR Expense`, `DR GST`, `CR Accounts Payable`).</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-semibold text-slate-900 mono">erp_record_payment</td>
+                <td class="p-3 mono text-[11px] text-slate-600">{ "invoice_id": str, "amount": float, "discount_taken": float }</td>
+                <td class="p-3 text-slate-600">Disburses settlement payment in the ERP ledger, clearing the AP liability and recognizing early payment cash discounts.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-semibold text-slate-900 mono">erp_get_department_budget</td>
+                <td class="p-3 mono text-[11px] text-slate-600">{ "department": str }</td>
+                <td class="p-3 text-slate-600">Returns comprehensive department budget envelope: allocated budget, actual spend, encumbered commitments, and uncommitted balance.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Connecting External MCP Clients Configuration -->
+      <div class="space-y-2">
+        <div class="text-xs font-bold text-slate-900 flex items-center space-x-1.5">
+          <i class="fa-solid fa-sliders text-[#0136A1]"></i>
+          <span>Connecting Antigravity / Claude Desktop / Cursor to APEX-AP FastMCP</span>
+        </div>
+        <p class="text-xs text-slate-600">To allow coding agents or desktop AI assistants to orchestrate the university ERP directly, add the APEX-AP server configuration to your <code class="bg-slate-100 text-blue-700 px-1.5 py-0.2 rounded font-mono">mcpServers</code> configuration block:</p>
+        <pre class="p-3 rounded-md bg-slate-900 text-slate-200 font-mono text-[11px] overflow-x-auto border border-slate-800"><code>{
+  "mcpServers": {
+    "jklu-erp": {
+      "command": "python",
+      "args": ["-m", "ap_agent.erp_mcp_server"],
+      "env": {
+        "PYTHONPATH": "ap_agent"
+      }
+    }
+  }
+}</code></pre>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- GEMINI API KEY MODAL -->
+  <div id="key-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-white border border-slate-200 rounded-lg max-w-md w-full p-6 shadow-xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-2">
+          <i class="fa-solid fa-key text-[#F58220]"></i>
+          <span>Configure Gemini API Key</span>
+        </h3>
+        <button onclick="closeApiKeyModal()" class="text-slate-400 hover:text-slate-700 text-lg leading-none">&times;</button>
+      </div>
+      <p class="text-xs text-slate-600 mb-3 leading-relaxed">Provide your Google Gemini API key to activate Multimodal Vision OCR and intelligent Maker reflection. If omitted, the deterministic fallback engine executes automatically.</p>
+      <input type="password" id="modal-api-key" class="w-full bg-white border border-slate-300 rounded-md p-2.5 text-xs text-slate-900 mono focus:border-[#0136A1] focus:ring-2 focus:ring-blue-600/10 focus:outline-none mb-4" placeholder="AIzaSy...">
+      <div class="flex justify-end space-x-2">
+        <button onclick="closeApiKeyModal()" class="px-3 py-1.5 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-md text-xs font-medium">Cancel</button>
+        <button onclick="saveApiKey()" class="px-3.5 py-1.5 bg-[#0136A1] hover:bg-[#00226B] text-white rounded-md text-xs font-semibold shadow-2xs">Save Key</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    let activeWorkflow = 'quotations'; // 'quotations', 'invoices', or 'docs'
+    let currentInvoice = null;
+    let currentProposal = null;
+    let activeRole = 'maker';
+    let allDepartments = [];
+    let selectedQuotationFiles = []; // Holds actual File objects
+
+    // --- WORKFLOW MODE TOGGLE (QUOTATIONS / INVOICES / DOCS) ---
+    function switchWorkflowMode(mode) {
+      activeWorkflow = mode;
+      
+      const secQuotations = document.getElementById('section-quotations');
+      const secInvoices = document.getElementById('section-invoices');
+      const secDocs = document.getElementById('section-docs');
+
+      const btnQuotations = document.getElementById('btn-mode-quotations');
+      const btnInvoices = document.getElementById('btn-mode-invoices');
+      const btnDocs = document.getElementById('btn-mode-docs');
+
+      // Hide all sections first
+      secQuotations.classList.add('hidden');
+      secInvoices.classList.add('hidden');
+      secDocs.classList.add('hidden');
+
+      // Reset button styles to inactive
+      const inactiveClass = 'px-4 py-2 rounded-md text-xs font-bold transition flex items-center space-x-2 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200 shadow-2xs';
+      const activeClass = 'px-4 py-2 rounded-md text-xs font-bold transition flex items-center space-x-2 bg-[#0136A1] text-white shadow-xs';
+
+      btnQuotations.className = inactiveClass;
+      btnInvoices.className = inactiveClass;
+      btnDocs.className = inactiveClass;
+
+      if (mode === 'quotations') {
+        secQuotations.classList.remove('hidden');
+        btnQuotations.className = activeClass;
+      } else if (mode === 'invoices') {
+        secInvoices.classList.remove('hidden');
+        btnInvoices.className = activeClass;
+      } else if (mode === 'docs') {
+        secDocs.classList.remove('hidden');
+        btnDocs.className = activeClass;
+      }
+    }
+
+    // --- LOAD ALL 12 UNIVERSITY DEPARTMENTS & SOURCED HODS FROM JKLU.EDU.IN ---
+    async function loadDepartments() {
+      try {
+        const res = await fetch('/departments');
+        allDepartments = await res.json();
+        const sel = document.getElementById('prop-dept');
+        sel.innerHTML = '';
+        allDepartments.forEach(d => {
+          sel.innerHTML += `<option value="${d.code}">${d.name} (${d.code})</option>`;
+        });
+        updateDeptMeta();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function updateDeptMeta() {
+      const code = document.getElementById('prop-dept').value;
+      const dept = allDepartments.find(d => d.code === code);
+      if (dept) {
+        document.getElementById('dept-budget-note').innerHTML = `
+          <div class="font-bold text-slate-900 mb-0.5 flex items-center space-x-2">
+            <span>🏛️ ${dept.name}</span>
+          </div>
+          <div class="text-slate-600 mb-1">
+            <span class="text-[#0136A1] font-semibold">👤 HoD / Dean (jklu.edu.in):</span> <b class="text-slate-800">${dept.hod}</b>
+          </div>
+          <div class="text-[11px] text-slate-500 mono flex items-center space-x-3">
+            <span>💰 <b>Available:</b> <span class="text-emerald-700 font-bold">₹${Number(dept.available).toLocaleString('en-IN')}</span></span>
+            <span>•</span>
+            <span>Allocated: ₹${Number(dept.allocated).toLocaleString('en-IN')}</span>
+          </div>
+        `;
+      }
+    }
+
+    // --- DRAG AND DROP & REAL FILE UPLOAD HANDLING ---
+    function handleDragOver(e) {
+      e.preventDefault();
+      document.getElementById('prop-dropzone').classList.add('dropzone-active');
+    }
+
+    function handleDragLeave(e) {
+      e.preventDefault();
+      document.getElementById('prop-dropzone').classList.remove('dropzone-active');
+    }
+
+    function handleFileDrop(e) {
+      e.preventDefault();
+      document.getElementById('prop-dropzone').classList.remove('dropzone-active');
+      if (e.dataTransfer && e.dataTransfer.files) {
+        handleQuotationFiles(e.dataTransfer.files);
+      }
+    }
+
+    function handleQuotationFiles(fileList) {
+      for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i];
+        if (!selectedQuotationFiles.some(f => f.name === file.name && f.size === file.size)) {
+          selectedQuotationFiles.push(file);
+        }
+      }
+      renderAttachedFilesList();
+    }
+
+    function removeQuotationFile(idx) {
+      selectedQuotationFiles.splice(idx, 1);
+      renderAttachedFilesList();
+    }
+
+    function getFormatBadge(filename) {
+      const ext = filename.split('.').pop().toLowerCase();
+      if (ext === 'pdf') return '<span class="px-1.5 py-0.5 rounded-md bg-rose-50 text-rose-700 text-[10px] font-mono font-bold border border-rose-200">PDF</span>';
+      if (['xlsx', 'xls', 'csv'].includes(ext)) return '<span class="px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-mono font-bold border border-emerald-200">EXCEL</span>';
+      if (['docx', 'doc'].includes(ext)) return '<span class="px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-mono font-bold border border-blue-200">DOCX</span>';
+      if (['pptx', 'ppt'].includes(ext)) return '<span class="px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-700 text-[10px] font-mono font-bold border border-amber-200">PPTX</span>';
+      if (['png', 'jpg', 'jpeg', 'webp'].includes(ext)) return '<span class="px-1.5 py-0.5 rounded-md bg-purple-50 text-purple-700 text-[10px] font-mono font-bold border border-purple-200">IMAGE</span>';
+      return '<span class="px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-mono font-bold border border-slate-200">MARKDOWN</span>';
+    }
+
+    function formatFileSize(bytes) {
+      if (!bytes || isNaN(bytes)) return '0 B';
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function renderAttachedFilesList() {
+      const container = document.getElementById('prop-files-container');
+      const badge = document.getElementById('files-count-badge');
+      const count = selectedQuotationFiles.length;
+
+      badge.textContent = `${count} file${count === 1 ? '' : 's'} attached`;
+      if (count >= 2) {
+        badge.className = 'text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md border border-emerald-200 font-semibold';
+      } else {
+        badge.className = 'text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200 font-medium';
+      }
+
+      if (count === 0) {
+        container.innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = '';
+      selectedQuotationFiles.forEach((f, idx) => {
+        const badgeHtml = getFormatBadge(f.name);
+        const sizeStr = formatFileSize(f.size);
+        container.innerHTML += `
+          <div class="flex items-center justify-between p-2 rounded-md bg-slate-50 border border-slate-200 text-xs hover:bg-slate-100/60 transition">
+            <div class="flex items-center space-x-2 truncate">
+              ${badgeHtml}
+              <span class="text-slate-800 truncate font-medium">${f.name}</span>
+              <span class="text-[10px] text-slate-500 mono">(${sizeStr})</span>
+            </div>
+            <button type="button" onclick="removeQuotationFile(${idx})" class="text-slate-400 hover:text-rose-600 p-1 transition ml-2" title="Remove file">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        `;
+      });
+    }
+
+    // --- LOAD PRESET SAMPLE QUOTATIONS ---
+    function loadSampleQuotations() {
+      const qA = `TAX QUOTATION
+Vendor: Dell India Enterprise Solutions
+Item: Dell Latitude 5440 Core i5 16GB 512GB SSD
+Qty: 10
+Unit Price: 76,000.00
+Amount: 760,000.00
+Subtotal: 760,000.00
+GST 18%: 136,800.00
+Total: 896,800.00
+Delivery: 7 days
+Warranty: 3 years
+Service: 24x7 4-Hour Response Onsite Premier Support with OEM Certified Engineers
+Payment Terms: 30 Days Net`;
+
+      const qB = `TAX QUOTATION
+Vendor: MicroTech Systems & Peripherals
+Item: Dell Latitude 5440 Core i5 16GB 512GB SSD
+Qty: 10
+Unit Price: 73,500.00
+Amount: 735,000.00
+Subtotal: 735,000.00
+GST 18%: 132,300.00
+Total: 867,300.00
+Delivery: 28 days
+Warranty: 1 year
+Service: Standard Carry-in Warranty (No Onsite Support)
+Payment Terms: 100% Advance`;
+
+      const qC = `TAX QUOTATION
+Vendor: Lenovo Commercial Tech Pvt Ltd
+Item: ThinkPad E14 Core i5 16GB 512GB SSD
+Qty: 10
+Unit Price: 79,000.00
+Amount: 790,000.00
+Subtotal: 790,000.00
+GST 18%: 142,200.00
+Total: 932,200.00
+Delivery: 10 days
+Warranty: 3 years
+Service: 3-Year Premier Onsite Support
+Payment Terms: 30 Days Net`;
+
+      const fileA = new File([qA], "Dell_Quotation_Laptops.txt", { type: "text/plain" });
+      const fileB = new File([qB], "MicroTech_Vendor_Bid.txt", { type: "text/plain" });
+      const fileC = new File([qC], "Lenovo_Commercial_Proposal.txt", { type: "text/plain" });
+
+      selectedQuotationFiles = [fileA, fileB, fileC];
+      renderAttachedFilesList();
+
+      document.getElementById('prop-title').value = "10 High-Performance Workstation Laptops for AI Lab";
+      const deptEl = document.getElementById('prop-dept');
+      if (allDepartments && allDepartments.length > 0) {
+        deptEl.value = allDepartments[0].code;
+        updateDeptMeta();
+      }
+    }
+
+    // --- PROPOSAL SUBMISSION & SCRUTINY ---
+    async function handleProposalScrutiny(e) {
+      if (e) e.preventDefault();
+      const titleInput = document.getElementById('prop-title');
+      const deptInput = document.getElementById('prop-dept');
+      const title = (titleInput.value || '').trim();
+      const dept = (deptInput.value || '').trim();
+
+      if (!title) {
+        alert("Please enter a Requisition Title / Procurement Goal (e.g. '10 High-Performance Workstation Laptops for AI Lab').");
+        titleInput.focus();
+        return;
+      }
+
+      if (!dept) {
+        alert("Please select a Department from the list.");
+        deptInput.focus();
+        return;
+      }
+
+      if (!selectedQuotationFiles || selectedQuotationFiles.length < 2) {
+        alert("University Financial Policy requires at least 2 competitive vendor quotation files for scrutiny (Expenses > ₹20,000). Please attach 2 or more files, or click 'Load Sample Quotations'.");
+        return;
+      }
+
+      const fd = new FormData();
+      fd.append('title', title);
+      fd.append('department', dept);
+
+      // Pre-extract text from attached text files so both legacy & modern backend endpoints work seamlessly
+      const textList = [];
+      for (const f of selectedQuotationFiles) {
+        try {
+          if (typeof f.text === 'function') {
+            const content = await f.text();
+            if (content && content.trim()) {
+              textList.push(content.trim());
+            }
+          }
+        } catch (_) {}
+      }
+      fd.append('quotations_json', JSON.stringify(textList));
+
+      selectedQuotationFiles.forEach(f => {
+        fd.append('files', f, f.name);
+      });
+
+      const btn = document.getElementById('btn-scrutinize');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Extracting Documents & Querying Market Rates...</span>';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/proposals/scrutinize', { method: 'POST', body: fd });
+        if (!res.ok) {
+          let errMsg = 'Failed to scrutinize quotations';
+          try {
+            const errData = await res.json();
+            if (typeof errData.detail === 'string') {
+              errMsg = errData.detail;
+            } else if (Array.isArray(errData.detail)) {
+              errMsg = errData.detail.map(d => {
+                const loc = d.loc ? d.loc.filter(x => x !== 'body').join('.') : '';
+                return (loc ? loc + ': ' : '') + (d.msg || JSON.stringify(d));
+              }).join('\n');
+            } else if (errData.detail && typeof errData.detail === 'object') {
+              errMsg = JSON.stringify(errData.detail);
+            } else if (errData.message) {
+              errMsg = errData.message;
+            }
+          } catch (_) {
+            errMsg = `Server error (${res.status}: ${res.statusText || 'Unknown'})`;
+          }
+          throw new Error(errMsg);
+        }
+        const data = await res.json();
+        currentProposal = data;
+        displayProposalDetails(data);
+      } catch (err) {
+        alert("Scrutiny Error: " + err.message);
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    function displayProposalDetails(p) {
+      document.getElementById('prop-placeholder').classList.add('hidden');
+      document.getElementById('proposal-results-card').classList.remove('hidden');
+
+      document.getElementById('prop-disp-title').textContent = p.title;
+      document.getElementById('prop-disp-status').textContent = p.status || 'PENDING_HOD';
+      document.getElementById('prop-disp-dept').textContent = p.department;
+      document.getElementById('prop-disp-id').textContent = p.id;
+      document.getElementById('prop-disp-amount').textContent = '₹' + Number(p.recommended_amount).toLocaleString('en-IN', {minimumFractionDigits: 2});
+
+      // Comparative Statement Markdown
+      document.getElementById('prop-summary-markdown').innerHTML = (p.comparative_statement_markdown || '')
+        .replace(/### (.*)/g, '<div class="font-bold text-slate-900 text-sm mb-1.5">$1</div>')
+        .replace(/#### (.*)/g, '<div class="font-semibold text-[#0136A1] mt-2 mb-1">$1</div>')
+        .replace(/\*\*(.*?)\*\*/g, '<b class="text-slate-900">$1</b>')
+        .replace(/- (.*)/g, '<div class="text-slate-700 mb-0.5">• $1</div>');
+
+      // Table 1: Multi-Factor Comparison
+      const qTbody = document.getElementById('quotation-comparison-tbody');
+      qTbody.innerHTML = '';
+      p.quotations.forEach(q => {
+        const isRec = q.recommendation_tag === 'RECOMMENDED_BEST_VALUE';
+        const isL1 = q.recommendation_tag === 'LOWEST_COST_L1';
+        const rowBg = isRec ? 'bg-amber-50/70 border-l-4 border-l-[#F58220]' : 'hover:bg-slate-50';
+        const tagBadge = isRec ? '<span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded-md border border-amber-200 font-bold">🏆 Best Value</span>' :
+                         (isL1 ? '<span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded-md border border-blue-200 font-bold">🏷️ Lowest Cost (L1)</span>' :
+                                 '<span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md border border-slate-200">⚪ Compliant</span>');
+
+        qTbody.innerHTML += `
+          <tr class="${rowBg} border-b border-slate-100">
+            <td class="p-2.5 font-medium text-slate-900">${q.vendor_name}</td>
+            <td class="p-2.5 mono font-semibold text-slate-900">₹${Number(q.total_amount).toLocaleString('en-IN')}</td>
+            <td class="p-2.5 mono text-slate-700">${q.delivery_days} days</td>
+            <td class="p-2.5 mono text-slate-700">${q.warranty_months / 12} yrs</td>
+            <td class="p-2.5 text-slate-600 text-[11px]">${q.after_sales_service}</td>
+            <td class="p-2.5 mono font-bold text-emerald-700">${q.total_score}</td>
+            <td class="p-2.5">${tagBadge}</td>
+          </tr>
+        `;
+      });
+
+      // Table 2: Automated Online Market Benchmarking
+      const bTbody = document.getElementById('market-bench-tbody');
+      bTbody.innerHTML = '';
+      (p.market_comparisons || []).forEach(it => {
+        const hasVar = it.variance_pct > 0;
+        const varSign = it.variance_pct > 0 ? '+' : '';
+        const varColor = it.variance_pct > 5.0 ? 'text-rose-600' : (it.variance_pct < -5.0 ? 'text-emerald-700' : 'text-slate-700');
+        bTbody.innerHTML += `
+          <tr class="hover:bg-slate-50 border-b border-slate-100">
+            <td class="p-2.5 font-medium text-slate-900">${it.item_name}</td>
+            <td class="p-2.5 mono text-slate-800">₹${Number(it.quoted_price || it.unit_price || 0).toLocaleString('en-IN')}</td>
+            <td class="p-2.5 mono text-blue-700 font-semibold">₹${Number(it.benchmark_price).toLocaleString('en-IN')}</td>
+            <td class="p-2.5 mono text-slate-500">₹${Number(it.min_market_price || it.benchmark_price*0.9).toFixed(0)} - ₹${Number(it.max_market_price || it.benchmark_price*1.1).toFixed(0)}</td>
+            <td class="p-2.5 mono font-bold ${varColor}">${varSign}${it.variance_pct}%</td>
+            <td class="p-2.5 text-slate-600 text-[11px]">${it.source || 'GeM Portal & Amazon B2B'}</td>
+          </tr>
+        `;
+      });
+
+      // 4-Step Approval Stepper
+      const stepper = document.getElementById('prop-approval-stepper');
+      stepper.innerHTML = '';
+      const roles = ['HOD', 'PURCHASE_OFFICER', 'ACCOUNTS', 'CFO'];
+      const roleTitles = {
+        HOD: '1. HoD Initiation',
+        PURCHASE_OFFICER: '2. Purchase Scrutiny',
+        ACCOUNTS: '3. Accounts Clearance',
+        CFO: '4. CFO Final Sanction'
+      };
+      const roleOfficers = {
+        HOD: 'Respective Dean / HoD',
+        PURCHASE_OFFICER: 'Mr. Sonjay Dahiya (DGM Admin)',
+        ACCOUNTS: 'CA. Arvind Kumar (DGM Finance)',
+        CFO: 'CA K.K. Maheshwari (CFO & Registrar)'
+      };
+
+      let pendingRole = null;
+      roles.forEach(r => {
+        const step = (p.approvals || []).find(a => a.role === r);
+        const isDone = step && step.status === 'APPROVED';
+        const isPending = step && step.status === 'PENDING';
+        if (isPending && !pendingRole) pendingRole = r;
+
+        const bg = isDone ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : (isPending ? 'bg-orange-50 text-orange-900 border-orange-300 font-bold ring-2 ring-orange-400/20' : 'bg-slate-50 text-slate-400 border-slate-200');
+        const icon = isDone ? 'fa-circle-check text-emerald-600' : (isPending ? 'fa-spinner fa-spin text-orange-600' : 'fa-clock text-slate-400');
+
+        stepper.innerHTML += `
+          <div class="p-2.5 rounded-md border ${bg} flex flex-col items-center">
+            <i class="fa-solid ${icon} mb-1"></i>
+            <span class="font-semibold text-[11px] text-slate-900">${roleTitles[r]}</span>
+            <span class="text-[9px] text-slate-500 mt-0.5">${roleOfficers[r]}</span>
+            <span class="text-[9px] uppercase tracking-wider mt-1 px-1.5 py-0.2 rounded-md font-mono ${isDone ? 'bg-emerald-100 text-emerald-800' : (isPending ? 'bg-orange-100 text-orange-800 font-semibold' : 'bg-slate-200 text-slate-600')}">${step ? step.status : 'PENDING'}</span>
+          </div>
+        `;
+      });
+
+      // Update Action Box
+      const actionBox = document.getElementById('prop-action-box');
+      if (p.status === 'PO_ISSUED') {
+        actionBox.innerHTML = `
+          <div class="w-full flex items-center justify-between text-emerald-800 font-bold bg-emerald-50 p-4 rounded-md border border-emerald-200">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-stamp text-lg text-orange-600"></i>
+              <span>CFO Final Sanction Granted! University Purchase Order Issued: <span class="text-slate-900 mono">${p.po_number}</span></span>
+            </div>
+            <button onclick="switchWorkflowMode('invoices')" class="px-3.5 py-1.5 bg-[#0136A1] hover:bg-[#00226B] text-white rounded-md text-xs font-semibold shadow-xs">Proceed to 3-Way Matching</button>
+          </div>
+        `;
+      } else if (pendingRole) {
+        document.getElementById('action-role-title').textContent = `Sign-off Required: ${roleTitles[pendingRole]} (${roleOfficers[pendingRole]})`;
+        document.getElementById('action-role-desc').textContent = `Verify multi-criteria scrutiny matrix, fair market check, and authorize proposal to forward.`;
+        actionBox.classList.remove('hidden');
+      }
+    }
+
+    async function submitProposalDecision(approve) {
+      if (!currentProposal) return;
+      const pendingStep = (currentProposal.approvals || []).find(a => a.status === 'PENDING');
+      if (!pendingStep) {
+        alert("Proposal already fully approved!");
+        return;
+      }
+
+      const fd = new FormData();
+      fd.append('role', pendingStep.role);
+      fd.append('approve', approve);
+      fd.append('acted_by', 'University Officer');
+
+      try {
+        const res = await fetch(`/proposals/${currentProposal.id}/decision`, { method: 'POST', body: fd });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          const msg = typeof errData.detail === 'string' ? errData.detail : (errData.message || `Decision failed (${res.status})`);
+          throw new Error(msg);
+        }
+        const data = await res.json();
+        alert(data.message || 'Decision recorded successfully');
+        const pRef = await fetch(`/proposals/${currentProposal.id}`);
+        currentProposal = await pRef.json();
+        displayProposalDetails(currentProposal);
+        loadOverviewStats();
+      } catch (e) {
+        alert("Decision Error: " + e.message);
+      }
+    }
+
+    // --- PHASE 2: INVOICE PROCESSING ---
+    function fileSelected(input) {
+      if (input.files && input.files[0]) document.getElementById('file-label').textContent = input.files[0].name;
+    }
+
+    function switchRole(role) {
+      activeRole = role;
+      const roles = ['maker', 'procurement', 'accounts', 'department'];
+      roles.forEach(r => {
+        const btn = document.getElementById('tab-' + r);
+        if (r === role) {
+          btn.className = (r === 'maker') ? 'px-3.5 py-1.5 rounded-md text-xs font-semibold flex items-center space-x-2 transition bg-[#0136A1] text-white shadow-xs border border-[#0136A1]' :
+                          'px-3.5 py-1.5 rounded-md text-xs font-semibold flex items-center space-x-2 transition bg-[#F58220] text-white shadow-xs border border-[#F58220]';
+        } else {
+          btn.className = 'px-3.5 py-1.5 rounded-md text-xs font-semibold flex items-center space-x-2 transition bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200';
+        }
+      });
+      renderActiveView();
+    }
+
+    function renderActiveView() {
+      if (!currentInvoice) return;
+      document.getElementById('view-procurement').classList.add('hidden');
+      document.getElementById('view-accounts').classList.add('hidden');
+      document.getElementById('view-department').classList.add('hidden');
+
+      if (activeRole === 'procurement') {
+        document.getElementById('view-procurement').classList.remove('hidden');
+        renderProcurementView();
+      } else if (activeRole === 'accounts') {
+        document.getElementById('view-accounts').classList.remove('hidden');
+        renderAccountsView();
+      } else if (activeRole === 'department') {
+        document.getElementById('view-department').classList.remove('hidden');
+        renderDepartmentView();
+      }
+    }
+
+    function renderAgentLogs(logs) {
+      const logBox = document.getElementById('agent-logs');
+      if (!logs || logs.length === 0) {
+        logBox.innerHTML = `
+          <div class="p-2.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
+            ✓ Autonomous Agent Maker execution completed successfully.
+          </div>
+        `;
+        return;
+      }
+      logBox.innerHTML = '';
+      logs.forEach(l => {
+        const badgeColor = l.stage === 'MAKER_DOSSIER_COMPLETE' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' :
+                           (l.stage.includes('TOOL') ? 'bg-blue-500/20 text-sky-300 border-blue-500/40' : 'bg-amber-500/20 text-amber-300 border-amber-500/40');
+        logBox.innerHTML += `
+          <div class="p-2.5 rounded-md bg-slate-950/70 border border-slate-800 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="px-1.5 py-0.5 rounded-md text-[10px] font-bold border ${badgeColor}">${l.stage}</span>
+              <span class="text-slate-400 text-[10px]">${l.tool ? `Tool: ${l.tool}` : 'Reasoning step'}</span>
+            </div>
+            ${l.thought ? `<div class="text-slate-300 text-[11px] leading-relaxed"><span class="text-slate-400">Thought:</span> ${l.thought}</div>` : ''}
+            ${l.tool_output ? `<div class="text-[10px] bg-black/40 p-1.5 rounded-md text-slate-400 border border-slate-800/80 overflow-x-auto">${JSON.stringify(l.tool_output).slice(0, 180)}</div>` : ''}
+          </div>
+        `;
+      });
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    async function handleIntake(e) {
+      if (e) e.preventDefault();
+      const text = document.getElementById('invoice-text').value;
+      const fileInput = document.getElementById('invoice-file');
+      if (!text && (!fileInput.files || !fileInput.files[0])) {
+        alert("Please provide invoice text or upload an invoice file.");
+        return;
+      }
+
+      const logBox = document.getElementById('agent-logs');
+      logBox.innerHTML = '<div class="text-[#F58220] font-semibold mb-2">🚀 Starting Autonomous AP Agent Maker...</div>';
+
+      const formData = new FormData();
+      if (text) formData.append('text', text);
+      if (fileInput.files && fileInput.files[0]) formData.append('file', fileInput.files[0]);
+
+      try {
+        const res = await fetch('/invoices/intake', { method: 'POST', body: formData });
+        const data = await res.json();
+        currentInvoice = data;
+        displayInvoiceHeader(data);
+        renderActiveView();
+        loadOverviewStats();
+        if (data.observability_logs) {
+          renderAgentLogs(data.observability_logs);
+        }
+      } catch (err) {
+        logBox.innerHTML += `<div class="text-rose-400">Error running agent: ${err.message}</div>`;
+      }
+    }
+
+    function displayInvoiceHeader(inv) {
+      document.getElementById('no-invoice-placeholder').classList.add('hidden');
+      document.getElementById('invoice-header-card').classList.remove('hidden');
+
+      document.getElementById('disp-inv-no').textContent = inv.invoice_no;
+      document.getElementById('disp-vendor-name').textContent = inv.vendor_name;
+      document.getElementById('disp-po-no').textContent = inv.po_number || 'N/A';
+      document.getElementById('disp-total').textContent = '₹' + Number(inv.total).toLocaleString('en-IN', {minimumFractionDigits: 2});
+
+      const badge = document.getElementById('disp-status-badge');
+      badge.textContent = inv.status;
+      if (inv.status === 'PENDING_APPROVAL') {
+        badge.className = 'px-2.5 py-0.5 rounded-md text-xs font-bold uppercase border bg-emerald-50 text-emerald-800 border-emerald-200';
+      } else if (inv.status === 'HOLD_EXCEPTION') {
+        badge.className = 'px-2.5 py-0.5 rounded-md text-xs font-bold uppercase border bg-amber-50 text-amber-800 border-amber-200';
+      } else if (inv.status === 'REJECTED_DUPLICATE' || inv.status === 'REJECTED') {
+        badge.className = 'px-2.5 py-0.5 rounded-md text-xs font-bold uppercase border bg-rose-50 text-rose-800 border-rose-200';
+      } else {
+        badge.className = 'px-2.5 py-0.5 rounded-md text-xs font-bold uppercase border bg-blue-50 text-blue-800 border-blue-200';
+      }
+
+      document.getElementById('maker-verdict-box').innerHTML = (inv.maker_summary || 'No summary compiled.').replace(/### (.*)/g, '<div class="font-bold text-slate-900 mb-1">$1</div>').replace(/- \*\*(.*?)\*\*/g, '<div class="text-slate-700">• <b class="text-slate-900">$1</b>');
+
+      const stepper = document.getElementById('doa-stepper');
+      stepper.innerHTML = '';
+      if (inv.approvals && inv.approvals.length > 0) {
+        inv.approvals.forEach((appr, idx) => {
+          const isDone = appr.status === 'APPROVED';
+          const isPending = appr.status === 'PENDING';
+          const color = isDone ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : (isPending ? 'bg-orange-50 text-orange-800 border-orange-300 font-bold ring-2 ring-orange-400/20' : 'bg-slate-50 text-slate-500 border-slate-200');
+          const icon = isDone ? 'fa-check text-emerald-600' : 'fa-user-tie text-[#0136A1]';
+          stepper.innerHTML += `
+            <div class="flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs border ${color}">
+              <i class="fa-solid ${icon}"></i>
+              <span class="font-medium">${appr.role}</span>
+            </div>
+            ${idx < inv.approvals.length - 1 ? '<i class="fa-solid fa-arrow-right text-slate-300 text-xs"></i>' : ''}
+          `;
+        });
+      }
+    }
+
+    function renderProcurementView() {
+      const v = currentInvoice.checker_views.procurement_officer_view;
+      const alertBox = document.getElementById('procurement-alerts');
+      alertBox.innerHTML = '';
+      if (v.procurement_alerts && v.procurement_alerts.length > 0) {
+        v.procurement_alerts.forEach(a => {
+          alertBox.innerHTML += `<div class="p-2.5 rounded-md bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center space-x-2"><i class="fa-solid fa-triangle-exclamation"></i><span><b>${a.code}:</b> ${a.message}</span></div>`;
+        });
+      } else {
+        alertBox.innerHTML = `<div class="p-2.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center space-x-2"><i class="fa-solid fa-circle-check"></i><span>All line items and delivery quantities fully reconciled against Goods Receipt Notes.</span></div>`;
+      }
+
+      const tbody = document.getElementById('matrix-tbody');
+      tbody.innerHTML = '';
+      v.lines_comparison.forEach(row => {
+        const hasVar = row.variance_pct > 2.0;
+        const varColor = hasVar ? 'text-amber-700 font-bold' : 'text-slate-700';
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50 border-b border-slate-100">
+            <td class="p-2.5 font-medium text-slate-900 mono">${row.item_code}</td>
+            <td class="p-2.5 text-slate-700 mono">${row.ordered_qty}</td>
+            <td class="p-2.5 text-slate-700 mono">${row.received_qty}</td>
+            <td class="p-2.5 font-semibold text-blue-700 mono">${row.billed_qty}</td>
+            <td class="p-2.5 text-slate-600 mono">₹${Number(row.po_price).toFixed(2)}</td>
+            <td class="p-2.5 text-slate-900 mono">₹${Number(row.billed_price).toFixed(2)}</td>
+            <td class="p-2.5 mono ${varColor}">${row.variance_pct > 0 ? '+' : ''}${row.variance_pct}%</td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderAccountsView() {
+      const v = currentInvoice.checker_views.accounts_division_view;
+      const alertBox = document.getElementById('accounts-alerts');
+      alertBox.innerHTML = '';
+      if (v.accounts_alerts && v.accounts_alerts.length > 0) {
+        v.accounts_alerts.forEach(a => {
+          alertBox.innerHTML += `<div class="p-2.5 rounded-md bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center space-x-2"><i class="fa-solid fa-triangle-exclamation"></i><span><b>${a.code}:</b> ${a.message}</span></div>`;
+        });
+      }
+
+      const ps = v.payment_schedule || {};
+      document.getElementById('acc-msme-due').textContent = ps.due_date || 'N/A';
+      document.getElementById('acc-discount-saving').textContent = '₹' + Number(ps.discount_saving || 0).toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('acc-pay-on').textContent = ps.pay_on || 'N/A';
+
+      const ledgerBox = document.getElementById('acc-ledger-entries');
+      ledgerBox.innerHTML = '';
+      v.draft_ledger_entry.forEach(e => {
+        ledgerBox.innerHTML += `
+          <div class="flex justify-between items-center py-1 border-b border-slate-200/80">
+            <span class="${e.side === 'DR' ? 'text-orange-700 bg-orange-50 px-1.5 py-0.2 rounded-md border border-orange-200' : 'text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded-md border border-emerald-200'} font-semibold text-[10px]">${e.side}</span>
+            <span class="text-slate-700">${e.account}</span>
+            <span class="text-slate-900 font-semibold">₹${Number(e.amount).toLocaleString('en-IN', {minimumFractionDigits: 2})}</span>
+          </div>
+        `;
+      });
+    }
+
+    function renderDepartmentView() {
+      const v = currentInvoice.checker_views.respective_department_view;
+      document.getElementById('dept-name-badge').textContent = (v.department || 'GENERAL') + ' Department';
+      document.getElementById('dept-allocated').textContent = '₹' + Number(v.budget_allocated).toLocaleString('en-IN');
+      document.getElementById('dept-actual').textContent = '₹' + Number(v.budget_actual).toLocaleString('en-IN');
+      document.getElementById('dept-committed').textContent = '₹' + Number(v.budget_committed).toLocaleString('en-IN');
+      document.getElementById('dept-available').textContent = '₹' + Number(v.budget_available).toLocaleString('en-IN');
+
+      const pct = Math.min(100, Math.round(v.utilization_after || 0));
+      document.getElementById('dept-util-pct').textContent = pct + '%';
+      document.getElementById('dept-util-bar').style.width = pct + '%';
+
+      const alertBox = document.getElementById('department-alerts');
+      alertBox.innerHTML = '';
+      if (v.department_alerts && v.department_alerts.length > 0) {
+        v.department_alerts.forEach(a => {
+          alertBox.innerHTML += `<div class="p-2.5 rounded-md bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center space-x-2"><i class="fa-solid fa-triangle-exclamation"></i><span><b>${a.code}:</b> ${a.message}</span></div>`;
+        });
+      }
+    }
+
+    async function submitDecision(role, approve) {
+      if (!currentInvoice) return;
+      const formData = new FormData();
+      formData.append('role', role);
+      formData.append('approve', approve);
+      formData.append('acted_by', 'Auditor');
+
+      try {
+        const res = await fetch(`/invoices/${currentInvoice.id}/decision`, { method: 'POST', body: formData });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          const msg = typeof errData.detail === 'string' ? errData.detail : (errData.message || `Decision failed (${res.status})`);
+          throw new Error(msg);
+        }
+        const data = await res.json();
+        alert(data.message || 'Decision recorded successfully');
+        const ref = await fetch(`/invoices/${currentInvoice.id}`);
+        currentInvoice = await ref.json();
+        displayInvoiceHeader(currentInvoice);
+        renderActiveView();
+        loadOverviewStats();
+      } catch (e) {
+        alert("Decision Error: " + e.message);
+      }
+    }
+
+    async function executePaymentNow() {
+      if (!currentInvoice) return;
+      try {
+        const res = await fetch(`/payments/${currentInvoice.id}/execute`, { method: 'POST' });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          const msg = typeof errData.detail === 'string' ? errData.detail : (errData.message || `Payment execution failed (${res.status})`);
+          throw new Error(msg);
+        }
+        const data = await res.json();
+        alert(data.message || 'Payment executed successfully');
+        loadOverviewStats();
+      } catch (e) {
+        alert("Payment Error: " + e.message);
+      }
+    }
+
+    async function loadOverviewStats() {
+      try {
+        const res = await fetch('/erp/overview');
+        const data = await res.json();
+        document.getElementById('top-liability').textContent = '₹' + Number(data.ledger_summary.ap_liability || 0).toLocaleString('en-IN', {minimumFractionDigits: 2});
+        
+        const invRes = await fetch('/invoices');
+        const invs = await invRes.json();
+        document.getElementById('top-invoices-count').textContent = invs.length;
+      } catch (e) {}
+    }
+
+    function openApiKeyModal() { document.getElementById('key-modal').classList.remove('hidden'); }
+    function closeApiKeyModal() { document.getElementById('key-modal').classList.add('hidden'); }
+    async function saveApiKey() {
+      const key = document.getElementById('modal-api-key').value;
+      const fd = new FormData();
+      fd.append('api_key', key);
+      await fetch('/settings/gemini_key', { method: 'POST', body: fd });
+      closeApiKeyModal();
+      alert("Gemini API key saved!");
+    }
+
+    // Init
+    loadDepartments();
+    loadOverviewStats();
+  </script>
+</body>
+</html>
